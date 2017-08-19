@@ -15,5 +15,8 @@ export default new Router({
   }, {
     path: '/monitor',
     component: resolve => require(['@/components/Monitor.vue'], resolve)
+  },{
+    path: '/breedingLog',
+    component: resolve => require(['@/components/breedingLog.vue'], resolve)
   }]
 })
