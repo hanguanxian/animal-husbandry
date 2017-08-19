@@ -18,7 +18,7 @@
           <el-form-item>
             <el-button type="primary" @click="chartForm.byDataTime = !chartForm.byDataTime">{{ chartForm.byDataTime ? "按时区" : "按时段" }}</el-button>
           </el-form-item>
-          <el-form-item label="时间范围">
+          <el-form-item label="时间范围" v-show="chartForm.byDataTime">
             <el-select v-model="chartForm.dateRange" @change="dateTimeRange" placeholder="时间范围">
               <el-option label="近一天" :value="60 * 60 * 24"></el-option>
               <el-option label="近三天" :value="60 * 60 * 24 * 3"></el-option>
@@ -28,11 +28,11 @@
               <el-option label="近半年" :value="60 * 60 * 24 * 180"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="开始时间">
+          <el-form-item label="开始时间" v-show="chartForm.byDataTime">
             <el-date-picker v-model="chartForm.startTime" type="datetime" placeholder="开始时间">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="结束时间">
+          <el-form-item label="结束时间" v-show="chartForm.byDataTime">
             <el-date-picker v-model="chartForm.endTime" type="datetime" placeholder="结束时间">
             </el-date-picker>
           </el-form-item>
@@ -148,7 +148,20 @@
           startTime: self.chartForm.startTime,
           endTime: self.chartForm.endTime
         };
-        self.$.post("/interface/dataDisplay/queryHistoryData",self.poundsForm,function(res){
+        self.$.post("/interface/dataDisplay/queryHistoryData",data,function(res){
+          console.log(res);
+        })
+      },
+      queryIntegration(){
+        const self = this;
+        let data = {
+          factoryid: self.ponud.fid,
+          comid: self.ponud.cid,
+          senid: self.ponud.sid,
+          startTime: self.chartForm.startTime,
+          endTime: self.chartForm.endTime
+        };
+        self.$.post("/interface/dataDisplay/queryIntegration",data,function(res){
           console.log(res);
         })
       },
