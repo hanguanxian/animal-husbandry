@@ -14,7 +14,7 @@
                   <el-input v-model="loginForm.userName" placeholder="用户名"></el-input>
               </el-form-item>
               <el-form-item prop="password" label="密码:">
-                  <el-input type="password" placeholder="密码" v-model="loginForm.password" @keyup.enter.native="submitForm('ruleForm')"></el-input>
+                  <el-input type="password" placeholder="密码" v-model="loginForm.password"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="login">登录</el-button>
@@ -23,12 +23,33 @@
           </el-form>
         </el-row>
         <el-row v-show="registerFlag">
-          <el-form :model="registForm" ref="registForm" label-width="100px">
+          <el-form :model="registForm" ref="registForm" :rules="registRules" label-width="100px">
               <el-form-item prop="userName" label="用户名:">
                   <el-input v-model="registForm.userName" placeholder="用户名"></el-input>
               </el-form-item>
+              <el-form-item prop="power" label="用户类别:">
+                <el-select v-model="registForm.power" placeholder="请选择用户类别">
+                  <el-option label="普通用户" value="2"></el-option>
+                  <el-option label="专家" value="1"></el-option>
+                </el-select>
+              </el-form-item>
               <el-form-item prop="password" label="密码:">
-                  <el-input type="password" placeholder="密码" v-model="registForm.password" @keyup.enter.native="submitForm('ruleForm')"></el-input>
+                  <el-input type="password" placeholder="密码" v-model="registForm.password"></el-input>
+              </el-form-item>
+              <el-form-item prop="passwordConfirm" label="确认密码:" :rules="registRules.checkPass">
+                  <el-input type="password" placeholder="密码" v-model="registForm.passwordConfirm"></el-input>
+              </el-form-item>
+              <el-form-item prop="enterpriseName" label="企业名称:">
+                  <el-input placeholder="企业名称" v-model="registForm.enterpriseName"></el-input>
+              </el-form-item>
+              <el-form-item prop="personName" label="责任人:">
+                  <el-input placeholder="责任人" v-model="registForm.personName"></el-input>
+              </el-form-item>
+              <el-form-item prop="tel" label="联系方式:">
+                  <el-input placeholder="联系方式" v-model="registForm.tel"></el-input>
+              </el-form-item>
+              <el-form-item prop="email" label="Email:">
+                  <el-input placeholder="Email" v-model="registForm.email"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="register">注册</el-button>
@@ -42,10 +63,30 @@
 <script>
     export default {
     data () {
+      let validateTel = (rule, value, callback) => {
+        let telRegex = /^1[34578]\d{9}$/;
+        if (value === '') {
+          callback(new Error('请输入联系电话'));
+        } else if (!telRegex.test(value)) {
+          callback(new Error('手机号码格式不对'));
+        } else {
+          callback();
+        }
+      };
+      let validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.registForm.password) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
       return {
         title: '用户登录',
         registerFlag: false,
         loginUrl: "/interface/user/checklogin",
+        registUrl: "/interface/user/register",
         loginForm: {
           power:"1",
           userName: 'zhangsir',
@@ -63,25 +104,44 @@
           ]
         },
         registForm: {
-          userName: 'zhangsir',
-          password: '12121212'
+          userName: '',
+          password: '',
+          passwordConfirm: '',
+          power: '',
+          enterpriseName: '',
+          personName: '',
+          tel: '',
+          email: ''
+        },
+        registRules: {
+          power: [
+            { required: true, message: '请选择用户类别', trigger: 'blur' }
+          ],
+          userName: [
+            { required: true, message: '请输入用户名', trigger: 'blur' }
+          ],
+          password: [
+            { required: true, message: '请输入密码', trigger: 'blur' }
+          ],
+          enterpriseName: [
+            { required: true, message: '请输入企业名称', trigger: 'blur' }
+          ],
+          personName: [
+            { required: true, message: '请输入责任人姓名', trigger: 'blur' }
+          ],
+          tel: [
+            { validator: validateTel, trigger: 'blur' }
+          ],
+          email: [
+            { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+            { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change' }
+          ],
+          checkPass: [
+             { validator: validatePass, trigger: 'blur' }
+          ]
         }
       }
     },
-    watch: {
-    // 如果 question 发生改变，这个函数就会运行
-    // password_r: function () {
-    //   if(this.password_r ==''){
-    //     this.tips="输入密码啊"
-    //   }
-    //   else if(this.password_r != this.password)
-    //   {
-    //     this.tips="两次密码不一样哦"
-    //   }
-    //   else
-    //     this.tips="对接成功，可以注册了"
-    // }
-  },
   methods:{
     formChange(){
       this.registerFlag = !this.registerFlag;
@@ -107,7 +167,21 @@
       });
     },
     register() {
-
+      const self = this;
+      self.$refs.loginForm.validate((valid) => {
+        if (valid) {
+          delete self.registForm.passwordConfirm;
+          self.$.post(self.registUrl,self.registForm,function(data,textStatus){
+     					if(1){
+                self.$message.success('注册成功');
+                localStorage.setItem('msuserName',self.registForm.userName);
+     						self.$router.push('/index');
+     					}else{
+                self.$message.error('错误');
+     					}
+ 				   })
+        }
+      });
       }
     }
   }
