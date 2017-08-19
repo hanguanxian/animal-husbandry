@@ -63,6 +63,16 @@
 <script>
     export default {
     data () {
+      let validateTel = (rule, value, callback) => {
+        let telRegex = /^1[34578]\d{9}$/;
+        if (value === '') {
+          callback(new Error('请输入联系电话'));
+        } else if (!telRegex.test(value)) {
+          callback(new Error('手机号码格式不对'));
+        } else {
+          callback();
+        }
+      };
       let validatePass = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请再次输入密码'));
@@ -120,7 +130,7 @@
             { required: true, message: '请输入责任人姓名', trigger: 'blur' }
           ],
           tel: [
-            { required: true, message: '请输入联系方式', trigger: 'blur' }
+            { validator: validateTel, trigger: 'blur' }
           ],
           email: [
             { required: true, message: '请输入邮箱地址', trigger: 'blur' },
@@ -164,9 +174,10 @@
           self.$.post(self.registUrl,self.registForm,function(data,textStatus){
      					if(1){
                 self.$message.success('注册成功');
-     						
+                localStorage.setItem('msuserName',self.registForm.userName);
+     						self.$router.push('/index');
      					}else{
-                self.$message.error('用户名或密码错误');
+                self.$message.error('错误');
      					}
  				   })
         }
