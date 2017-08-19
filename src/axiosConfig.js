@@ -10,7 +10,7 @@ let config = {
   }
 }
 
-axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+//axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.paramsSerializer = config.paramsSerializer;
 axios.defaults.validateStatus = config.validateStatus;
 axios.interceptors.response.use(function(response) {
