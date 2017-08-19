@@ -4,12 +4,14 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-default/index.css'
-import axios from './axiosConfig.js';
+import jquery from 'jquery'
 
+//import axios from './axiosConfig.js';
+import 'element-ui/lib/theme-default/index.css'
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios;
+Vue.prototype.$ = jquery;
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

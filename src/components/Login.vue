@@ -91,10 +91,18 @@
       const self = this;
       self.$refs.loginForm.validate((valid) => {
         if (valid) {
-          self.$axios.post(self.loginUrl, self.loginForm).then((res) => {
-            console.log(res);
-            localStorage.setItem('msuserName',self.loginForm.userName);
-          });
+          self.$.post(self.loginUrl,self.loginForm,function(data,textStatus){
+     					if("0" == data){
+                localStorage.setItem('msuserName',self.loginForm.userName);
+     						self.$router.push('/index');
+     					}else{
+                self.$message.error('用户名或密码错误');
+     					}
+ 				   })
+          // self.$axios.post(self.loginUrl, self.loginForm).then((res) => {
+          //   console.log(res);
+          //   localStorage.setItem('msuserName',self.loginForm.userName);
+          // });
         }
       });
     },
