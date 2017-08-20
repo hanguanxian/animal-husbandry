@@ -49,7 +49,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onDaily">提交</el-button>
-                <el-button type="danger" @click="reset('form_daily')">重置</el-button>
+                <el-button type="danger" @click="resetForm('form_daily')">重置</el-button>
             </el-form-item>
         </el-form>
 
@@ -106,7 +106,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onPolling">提交</el-button>
-                <el-button type="danger" @click="reset('form_polling')">重置</el-button>
+                <el-button type="danger" @click="resetForm('form_polling')">重置</el-button>
             </el-form-item>
         </el-form>
 
@@ -456,23 +456,10 @@
                     curPage:1,
                 },
                 kind:"throw",
-                exportDialogShow:false,
-                form: {
-                    name: '',
-                    region: '',
-                    date1: '',
-                    date2: '',
-                    delivery: false,
-                    type: [],
-                    resource: '',
-                    desc: ''
-                },
+                exportDialogShow:false
             }
         },
         methods: {
-            onSubmit() {
-                console.log('submit!');
-            },
             /* 方法 */ 
             arrRepeat(arr){
                 if(Object.prototype.toString.call(arr)=='[object Array]' && arr.length>0){
@@ -563,20 +550,16 @@
                     //当对象是水质时，对应的类别;
                     patrolContentType2: self.form_polling.content[2] || "",
                     //当对象是螃蟹/虾/鱼时，对应的类别
-
                     patrolContentStatus: self.form_polling.content[3] || "",
                     //状态内容，例如偏低、正常、偏高
-
                     patrolTargetPart:self.form_polling.content[4] || "",
                     //当选择“体征”时，弹出的部位选择框，因此对应的是螃蟹/虾/鱼的部位
-
                     //录入数据：
                     islog: self.form_polling.inputData == 'yes' ? 'yes':'no', //对应是否录入数据的元素标签值，取值为yes或no
                     catalog:self.form_polling.selectData,
                     //录入的数据类型
                     Ranges:self.form_polling.num,
                     //录入的数据范围
-
                     files:self.form_polling.picList,
                     //图片对象集合
                     activeTime:self.form_polling.date,
@@ -587,8 +570,7 @@
                 })
             },
             //重置参数
-            reset(formName){
-                console.log(this.$refs[formName]);
+            resetForm(formName){
                 this.$refs[formName].resetFields();
             },
 
@@ -630,7 +612,7 @@
                 }
                 self.$.post("IntelligentAgriculture/breedingLog/export",data,function(res){
                     console.log(res)
-                    this.$refs[formName].resetFields();
+                    self.resetForm(formName)
                 })
                 
             }
