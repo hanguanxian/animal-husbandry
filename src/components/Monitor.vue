@@ -8,8 +8,8 @@
           @change="areaChange">
         </el-cascader>
       </div>
-      <ul id="poundlist">
-				<li v-for="(ponud, index) in ponuds" @click="poundSelect(ponud)">{{ ponud.name }}</li>
+      <ul id="tangKoulist">
+				<li v-for="(tangKou, index) in tangKous" @click="tangKouSelect(tangKou)">{{ tangKou.name }}</li>
 			</ul>
     </el-col>
     <el-col :sm="{span: 12}">
@@ -47,7 +47,7 @@
   </el-row >
 </template>
 
-<script type="text/babel">
+<script>
   import IEcharts from 'vue-echarts-v3';
   let area = require("../assets/areaOptions.js");
   export default {
@@ -57,15 +57,15 @@
     data: () => ({
       options: [],
       selectedOptions: [],
-      pounds: [],
+      tangKous: [],
       loading: false,
-      poundsForm: {
+      tangKousForm: {
         areacode: '',
         facid: '',
         comid: ''
       },
-      showpoundUrl:'/interface/dataDisplay/showpound',
-      ponuds: [
+      showTangKouUrl:'/interface/dataDisplay/showTangKou',
+      tangKous: [
         {fid:1,cid:2,sid:'0102',order: '',name: '固城湖塘口1'},
         {fid:1,cid:2,sid:'0304',order: '',name: '固城湖塘口2'},
         {fid:2,cid:2,sid:'0102',order: '',name: '渔网大市场3'},
@@ -75,7 +75,7 @@
         {fid:6,cid:2,sid:'0409',order: '',name: '实验室'},
         {fid:7,cid:2,sid:'0',order: '43',name: '江宁基地'}
       ],
-      ponud: {},
+      tangKou: {},
       startTime: '',
       endTime: '',
       chartForm: {
@@ -102,7 +102,8 @@
     }),
     created() {
       this.options = area.areaOptions;
-      this.showpound();
+      this.tangKou = {fid:1,cid:2,sid:'0102',order: '',name: '固城湖塘口1'};
+      this.showTangKou();
       this.dateTimeRange(60 * 60 * 24);
     },
     methods: {
@@ -115,25 +116,22 @@
         that.loading = !that.loading;
         that.bar.series[0].data = data;
       },
-      showpound(){
+      showTangKou(){
         const self = this;
-        console.log(self.poundsForm);
-        self.$.post(self.showpoundUrl,self.poundsForm,function(res){
-          //TODO 塘口列表展示 pounds 赋值
-          self.pound = self.pounds[0];
+        self.$.post(self.showTangKouUrl,self.tangKousForm,function(res){
+          //TODO 塘口列表展示 tangKous 赋值
+          self.tangKouSelect(self.tangKous[0]);
         })
-        self.pound = self.pounds[0];
       },
-      poundSelect(selectPonud){//塘口选择
-        console.log(selectPonud);
-        this.ponud = selectPonud;
+      tangKouSelect(selecttangKou){//塘口选择
+        this.tangKou = selecttangKou;
       },
       queryCurrentData(){
         const self = this;
         let data = {
-          factoryid: self.ponud.fid,
-          comid: self.ponud.cid,
-          senid: self.ponud.sid
+          factoryid: self.tangKou.fid,
+          comid: self.tangKou.cid,
+          senid: self.tangKou.sid
         };
         self.$.post("/interface/dataDisplay/queryCurrentData",data,function(res){
           console.log(res);
@@ -142,9 +140,9 @@
       queryHistoryData(){
         const self = this;
         let data = {
-          factoryid: self.ponud.fid,
-          comid: self.ponud.cid,
-          senid: self.ponud.sid,
+          factoryid: self.tangKou.fid,
+          comid: self.tangKou.cid,
+          senid: self.tangKou.sid,
           startTime: self.chartForm.startTime,
           endTime: self.chartForm.endTime
         };
@@ -155,9 +153,9 @@
       queryIntegration(){
         const self = this;
         let data = {
-          factoryid: self.ponud.fid,
-          comid: self.ponud.cid,
-          senid: self.ponud.sid,
+          factoryid: self.tangKou.fid,
+          comid: self.tangKou.cid,
+          senid: self.tangKou.sid,
           startTime: self.chartForm.startTime,
           endTime: self.chartForm.endTime
         };
@@ -167,15 +165,14 @@
       },
       areaChange(arrValue) {//地区选择
         const self = this;
-        self.poundsForm.areacode = arrValue[2];
-        self.showpound();
+        self.tangKousForm.areacode = arrValue[2];
+        self.showTangKou();
       },
       dateTimeRange(value){
-        console.log(value);
         const self = this;
-        let now = new Date()
-        self.chartForm.endTime = now.format("yyyy-MM-dd HH:mm:ss");
-        self.chartForm.startTime = new Date(now.getTime() - value).format("yyyy-MM-dd HH:mm:ss");
+        let now = new Date();
+        self.chartForm.endTime = now.format("yyyy-MM-dd hh:mm:ss");
+        self.chartForm.startTime = new Date(now.getTime() - value*1000).format("yyyy-MM-dd hh:mm:ss");
         console.log(self.chartForm);
         self.queryCurrentData();
         self.queryHistoryData();
