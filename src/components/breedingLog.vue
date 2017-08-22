@@ -8,7 +8,7 @@
                 </el-radio-group>
             </el-form-item>
         </el-form>
-        <el-form  v-if="addTheme=='0'" ref="form_daily" :model="form_daily" label-width="80px">
+        <el-form  v-show="addTheme=='0'" ref="form_daily" :rules="daily_rule" :model="form_daily" label-width="80px">
             <el-form-item prop="pond" label="塘口选择">
                 <el-select v-model="form_daily.pond"  placeholder="请选择塘口">
                     <el-option v-for="(pond,index) in formData.pondList" :label="pond.name" :value="pond.value" :key="index"></el-option>
@@ -48,13 +48,13 @@
                 </el-date-picker>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="onDaily">提交</el-button>
+                <el-button type="primary" @click="onDaily('form_daily')">提交</el-button>
                 <el-button type="danger" @click="resetForm('form_daily')">重置</el-button>
             </el-form-item>
         </el-form>
 
 
-        <el-form v-if="addTheme=='1'" ref="form_polling" :model="form_polling" label-width="80px">
+        <el-form v-show="addTheme=='1'" ref="form_polling" :rules="polling_rule" :model="form_polling" label-width="80px">
             <el-form-item prop="pond" label="塘口选择">
                 <el-select v-model="form_polling.pond" placeholder="请选择塘口">
                     <el-option v-for="(pond,index) in formData.pondList" :label="pond.name" :value="pond.value" :key="index"></el-option>
@@ -74,7 +74,7 @@
             </el-form-item>
             <el-form-item v-if="form_polling.inputData === 'yes'">
                 <el-form-item prop="selectData" label="数据类型" style="display:inline-block">
-                    <el-select v-model="form_polling.selectData" placeholder="请选择">
+                    <el-select v-model="form_polling.selectData" placeholder="请选择" @change="watchDataType">
                         <el-option
                         v-for="item in formData.dataType"
                         :key="item.value"
@@ -85,7 +85,7 @@
                 </el-form-item>
                 <el-form-item prop="num" label="数值" style="display:inline-block">
                     <el-input placeholder="请输入数值" v-model="form_polling.num"></el-input>
-                    <span>(正常值<0.3mg/L)</span>
+                    <span>{{range}}</span>
                 </el-form-item>
             </el-form-item>
             <el-form-item prop="picList" label="上传图片">
@@ -105,7 +105,7 @@
                 </el-date-picker>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="onPolling">提交</el-button>
+                <el-button type="primary" @click="onPolling('form_polling')">提交</el-button>
                 <el-button type="danger" @click="resetForm('form_polling')">重置</el-button>
             </el-form-item>
         </el-form>
@@ -240,16 +240,35 @@
                     ],
                     money:"",
                     picList:[],
-                    date:"",
+                    date:new Date()
+                },
+                daily_rule:{
+                    pond:[
+                        {type:"number",required: true, message: '请选择塘口',trigger: 'change'}
+                    ],
+                    cate:[
+                        {type:"array",required: true, message: '请选择投放物类别',trigger: 'change'}
+                    ]
                 },
                 form_polling:{
                     pond:"",
                     content:[],
                     inputData:"",
                     selectData:'',
-                    num:"",
+                    num:0,
                     picList:[],
-                    date:"",
+                    date:new Date()
+                },
+                polling_rule:{
+                    pond:[
+                        {type:"number",required: true, message: '请选择塘口',trigger: 'change'}
+                    ],
+                    content:[
+                        {type:"array",required: true, message: '请选择巡视内容',trigger: 'change'}
+                    ],
+                    selectData:[
+                        {type:"number",required: true, message: '请选择数据类型',trigger: 'change'}
+                    ]
                 },
                 form_export:{
                     startTime:"",
@@ -257,22 +276,8 @@
                     exportType:"",
                 },
                 formData:{
-                    pondList:[
-                        {name:"固城湖",value:"guchenghu"},
-                        {name:"阳澄湖",value:"yangchenghu"},
-                        {name:"西湖",value:"xihu"}
-                    ],
-                    putCateList:[
-                        {label:"饵料",value:"erliao"},
-                        {label:"螺丝",value:"luosi"},
-                        {label:"水草",value:"shuicao"},
-                        {label:"水质调节剂",value:"SZtiaojie",children:[{
-                            label:"肥料",value:"feiliao"},{
-                            label:"菌类",value:"junlei"},{
-                            label:"消毒剂",value:"xiaoduji"
-                        }]},
-                        {label:"其他",value:"other"}
-                    ],
+                    pondList:[],
+                    putCateList:[],
                     polling_content:[{
                         label:"水质",
                         value:"shuizhi",
@@ -420,11 +425,9 @@
                         }
                     ],
                     dataType:[
-                        {label:"PH",value:"ph"},
-                        {label:"溶氧量",value:"o2"},
-                        {label:"水温",value:"shuiwen"}
+                        {label:"PH",value:"ph",range:">2.3ml"},
                     ],
-                    tb_daily:this.arrRepeat([{
+                    tb_daily:this.utils.arrRepeat([{
                         id:"0",
                         name:"测试五",
                         type:"螺蛳",
@@ -433,7 +436,7 @@
                         pic:["asdasd"],
                         date:"2018-08-19 08:00"
                     }]),
-                    tb_polling:this.arrRepeat([{
+                    tb_polling:this.utils.arrRepeat([{
                         id:"0",
                         pond:"固城湖",
                         content:"水质水肥度: 偏低",
@@ -456,22 +459,21 @@
                     curPage:1,
                 },
                 kind:"throw",
-                exportDialogShow:false
+                exportDialogShow:false,
+                range:""
             }
         },
         methods: {
-            /* 方法 */ 
-            arrRepeat(arr){
-                if(Object.prototype.toString.call(arr)=='[object Array]' && arr.length>0){
-                    for(let i = 0 ;i<10;i++){
-                        arr.push(arr[0])
+            /* 页面方法 */
+            //当数据类型改变时 切换range
+            watchDataType(val){
+                const self = this;
+                for(const item of self.formData.dataType){
+                    if(val==item.value){
+                        self.range =  "(正常值 "+item.range+")"
                     }
-                    return arr;
-                }else{
-                  return ""  
                 }
             },
-            /* 页面方法 */
             //新增物品
             addGoods(){
                 const self = this;
@@ -489,85 +491,130 @@
             getPonds(){
                 const self = this;
                 self.$.get("/IntelligentAgriculture/PondInfo/showPondinfos",function(res){
+                    res = JSON.parse(res);
                     console.log(res)
+                    self.formData.pondList = [];
+                    for(const item of res.pondinfo){
+                        self.formData.pondList.push({
+                            name:item.pondName,
+                            value:item.id
+                        })
+                    }
                 })
             },
             //获取输入标签
             getDailyInputType(){
                 const self = this;
                 self.$.get("/IntelligentAgriculture/breedingLog/dailyInputType",function(res){
+                    res = JSON.parse(res);
                     console.log(res)
+                    self.formData.putCateList = [];
+                    for(const item of res.dailyInputType){
+                        self.formData.putCateList.push({
+                            label:item.inputtypename,
+                            value:item.inputtype
+                        })
+                    }
                 })
             },
             //获取巡检类别
             getPollingType(){
                 const self = this;
                 self.$.get("/IntelligentAgriculture/breedingLog/showPatrolType",function(res){
+                    res = JSON.parse(res);
                     console.log(res)
+                    self.formData.polling_content = [];
+                    for(const item of res.patrolContentType){
+                        self.formData.polling_content.push({
+                            label:item.name,
+                            value:item.patroltype
+                        })
+                    }
                 })
             },
             //获取录入数据的类型
             getInputDataType(){
                 const self = this;
                 self.$.get("/IntelligentAgriculture/breedingLog/showManualData",function(res){
+                    res = JSON.parse(res);
                     console.log(res)
+                    self.formData.dataType = [];
+                    for(const item of res.manualData){
+                        self.formData.dataType.push({
+                            label:item.name,
+                            value:item.datatype,
+                            range:item.range
+                        })
+                    }
                 })
             },
             //提交日志
-            onDaily(){
+            onDaily(formName){
                 const self = this;
-                console.log(self.form_daily)
-                let throw_name = [];
-                self.form_daily.goods.forEach((item)=>{return item.value && arr.push(item.value)});
-                throw_name = throw_name.join(",")
-                let data = {
-                    throw_pondId: self.form_daily.pond,
-                    //水域唯一标识
-                    throw_dailyinputtype:self.form_daily.cate[0],
-                    //投放物类别
-                    throw_sub_dailyinputtype:self.form_daily.cate[1] || "" ,
-                    //投放物子类别
-                     throw_name_edit:throw_name,
-                    // //投放物名称
-                     throw_image:self.form_daily.picList,
-                    // //图片对象集合
-                     throw_activetime:self.form_daily.date
-                    // //活动时间
-                };
-                self.$.post("/breedingLog/throw",data,function(res){
-                    console.log(res)
-                })
+                self.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        let throw_name = [];
+                        self.form_daily.goods.forEach((item)=>{return item.value && throw_name.push(item.value)});
+                        throw_name = throw_name.join(",")
+                        let data = {
+                            throw_pondId: self.form_daily.pond,
+                            //水域唯一标识
+                            throw_dailyinputtype:self.form_daily.cate[0],
+                            //投放物类别
+                            throw_sub_dailyinputtype:self.form_daily.cate[1] || "" ,
+                            //投放物子类别
+                            throw_name_edit:throw_name,
+                            // //投放物名称
+                            throw_image:self.form_daily.picList,
+                            // //图片对象集合
+                            throw_activetime:self.form_daily.date
+                            // //活动时间
+                        };
+                        self.$.post("/IntelligentAgriculture/throwManage/throw?page=1&kind=throw",data,function(res){
+                            console.log(res)
+                        })
+                    } else {
+                        return false;
+                    }
+                });
             },
             //提交巡检
-            onPolling(){
+            onPolling(formName){
                 const self = this;
-                let data = {
-                    pondId:self.form_polling.pond,
-                    //水域唯一标识
-                    patrolTarget:self.form_polling.content[0],
-                    //巡视检查对象
-                    patrolContentType1:self.form_polling.content[1] || "",
-                    //当对象是水质时，对应的类别;
-                    patrolContentType2: self.form_polling.content[2] || "",
-                    //当对象是螃蟹/虾/鱼时，对应的类别
-                    patrolContentStatus: self.form_polling.content[3] || "",
-                    //状态内容，例如偏低、正常、偏高
-                    patrolTargetPart:self.form_polling.content[4] || "",
-                    //当选择“体征”时，弹出的部位选择框，因此对应的是螃蟹/虾/鱼的部位
-                    //录入数据：
-                    islog: self.form_polling.inputData == 'yes' ? 'yes':'no', //对应是否录入数据的元素标签值，取值为yes或no
-                    catalog:self.form_polling.selectData,
-                    //录入的数据类型
-                    Ranges:self.form_polling.num,
-                    //录入的数据范围
-                    files:self.form_polling.picList,
-                    //图片对象集合
-                    activeTime:self.form_polling.date,
-                    //活动时间
-                };
-                self.$.post("/breedingLog/patrol",data,function(res){
-                    console.log(res)
+                self.$refs[formName].validate((valid) => {
+                    if(valid){
+                        let data = {
+                            pondId:self.form_polling.pond,
+                            //水域唯一标识
+                            patrolTarget:self.form_polling.content[0],
+                            //巡视检查对象
+                            patrolContentType1:self.form_polling.content[1] || "",
+                            //当对象是水质时，对应的类别;
+                            patrolContentType2: self.form_polling.content[2] || "",
+                            //当对象是螃蟹/虾/鱼时，对应的类别
+                            patrolContentStatus: self.form_polling.content[3] || "",
+                            //状态内容，例如偏低、正常、偏高
+                            patrolTargetPart:self.form_polling.content[4] || "",
+                            //当选择“体征”时，弹出的部位选择框，因此对应的是螃蟹/虾/鱼的部位
+                            //录入数据：
+                            islog: self.form_polling.inputData == 'yes' ? 'yes':'no', //对应是否录入数据的元素标签值，取值为yes或no
+                            catalog:self.form_polling.selectData,
+                            //录入的数据类型
+                            Ranges:self.form_polling.num,
+                            //录入的数据范围
+                            files:self.form_polling.picList,
+                            //图片对象集合
+                            activeTime:self.form_polling.date,
+                            //活动时间
+                        };
+                        self.$.post("/breedingLog/patrol",data,function(res){
+                            console.log(res)
+                        })
+                    }else{
+                        return false;
+                    }
                 })
+                
             },
             //重置参数
             resetForm(formName){
@@ -621,10 +668,10 @@
         },
         created(){
             var self = this;
-            // self.getPonds();
-            // self.getDailyInputType();
-            // self.getPollingType();
-            // self.getInputDataType();
+            self.getPonds();
+            self.getDailyInputType();
+            self.getPollingType();
+            self.getInputDataType();
         }
     }
 </script>

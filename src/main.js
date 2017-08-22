@@ -8,10 +8,13 @@ import jquery from 'jquery'
 
 import axios from './axiosConfig.js';
 import 'element-ui/lib/theme-default/index.css'
+import utils from "./assets/utils"
+
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios;
 Vue.prototype.$ = jquery;
+Vue.prototype.utils = utils;
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

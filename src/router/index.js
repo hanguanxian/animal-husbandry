@@ -21,5 +21,8 @@ export default new Router({
   },{
     path: '/profit',
     component: resolve => require(['@/components/Profit.vue'], resolve)
+  },{
+    path: '/information',
+    component: resolve => require(['@/components/Information.vue'], resolve)
   }]
 })
