@@ -622,18 +622,11 @@
         },
         created(){
             var self = this;
-<<<<<<< HEAD:src/components/main/breedingLog.vue
             self.getPonds();
             self.getDailyInputType();
             self.getPollingType();
             self.getInputDataType();
             self.getTableDate()
-=======
-            // self.getPonds();
-            // self.getDailyInputType();
-            // self.getPollingType();
-            // self.getInputDataType();
->>>>>>> parent of 929065d... add information:src/components/breedingLog.vue
         }
     }
 </script>
