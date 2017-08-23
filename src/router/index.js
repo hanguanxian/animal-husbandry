@@ -6,6 +6,7 @@ Vue.use(Router)
 
 
 export default new Router({
+<<<<<<< HEAD
     routes: [{
 			path: "/main",
 			component: resolve => require(['@/components/main/main.vue'], resolve),
@@ -54,6 +55,25 @@ export default new Router({
         }
 
     ]
+=======
+  routes: [{
+    path: '/',
+    name: 'index',
+    component: resolve => require(['@/components/Index.vue'], resolve)
+  }, {
+    path: '/login',
+    component: resolve => require(['@/components/Login.vue'], resolve)
+  }, {
+    path: '/monitor',
+    component: resolve => require(['@/components/Monitor.vue'], resolve)
+  },{
+    path: '/breedingLog',
+    component: resolve => require(['@/components/breedingLog.vue'], resolve)
+  },{
+    path: '/profit',
+    component: resolve => require(['@/components/Profit.vue'], resolve)
+  }]
+>>>>>>> parent of 929065d... add information
 })
 // export default new Router({
 //   routes: [{
