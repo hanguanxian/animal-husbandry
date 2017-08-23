@@ -198,18 +198,18 @@
             </el-tab-pane>
         </el-tabs>
         <el-dialog title="导出日志" :visible.sync="exportDialogShow">
-            <el-form :model="form_export" label-width="120px">
+            <el-form ref="form_export" :model="form_export" label-width="120px">
                 <el-form-item prop="startTime" label="起始时间">
                     <el-date-picker
                         v-model="form_export.startTime"
-                        type="datetime"
+                        type="date"
                         placeholder="选择日期时间">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item prop="endTime" label="结束时间">
                     <el-date-picker
                         v-model="form_export.endTime"
-                        type="datetime"
+                        type="date"
                         placeholder="选择日期时间">
                     </el-date-picker>
                 </el-form-item>
@@ -222,7 +222,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="exportDialogShow = false">取 消</el-button>
-                <el-button type="primary" @click="exportDialogShow('form_export')">确 定</el-button>
+                <el-button type="primary" @click="exportTable('form_export')">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -445,9 +445,9 @@
                         date:"2018-08-19 08:00"
                     }]),
                     exportType:[
-                        {label:"全部",value:"all"},
-                        {label:"日常投放",value:"throw"},
-                        {label:"巡视检查",value:"patrol"},
+                        {label:"全部",value:"全部"},
+                        {label:"日常投放",value:"日常投放"},
+                        {label:"巡视检查",value:"巡视检查"},
                     ]
                 },
                 addTheme:"0",
@@ -634,7 +634,7 @@
                     kind: self.kind
                 }
                 console.log(data)
-                self.$.post("/IntelligentAgriculture/system/showMyLog",data,function(res){
+                self.$.get("/IntelligentAgriculture/system/showMyLog",data,function(res){
                     console.log(res)
                 })
             },
@@ -653,13 +653,14 @@
             exportTable(formName){
                 const self = this;
                 let data = {
-                    startTime:self.form_export.startTime,
-                    endTime:self.form_export.endTime,
+                    startTime:self.form_export.startTime.toLocaleDateString(),
+                    endTime:self.form_export.endTime.toLocaleDateString(),
                     content_select:self.form_export.exportType
                 }
                 self.$.post("IntelligentAgriculture/breedingLog/export",data,function(res){
                     console.log(res)
-                    self.resetForm(formName)
+                    self.resetForm(formName);
+                    self.exportDialogShow = false
                 })
                 
             }
@@ -672,6 +673,7 @@
             self.getDailyInputType();
             self.getPollingType();
             self.getInputDataType();
+            self.getTableDate()
         }
     }
 </script>

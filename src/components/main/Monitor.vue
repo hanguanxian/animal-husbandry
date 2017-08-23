@@ -49,7 +49,7 @@
 
 <script>
   import IEcharts from 'vue-echarts-v3';
-  let area = require("../assets/areaOptions.js");
+  let area = require("../../assets/areaOptions.js");
   export default {
     components: {
       IEcharts

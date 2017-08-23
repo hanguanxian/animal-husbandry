@@ -1,22 +1,6 @@
 <template>
 	<div class="index">
 		<el-row>
-			<el-col :span="24">
-				<el-menu :default-active="activeIndex" class="el-menu" mode="horizontal">
-					<el-menu-item index="1" class="logo"><span>&nbsp;</span></el-menu-item>
-					<el-menu-item index="1">首页</el-menu-item>
-					<el-menu-item index="2">环境监测</el-menu-item>
-					<el-menu-item index="3">养殖日志</el-menu-item>
-					<el-menu-item index="4">经济效益</el-menu-item>
-					<el-menu-item index="5">专家指导</el-menu-item>
-					<el-menu-item index="6">知识库</el-menu-item>
-					<el-menu-item index="7" class="settings_menu">
-						<i class="el-icon-setting"></i>配置管理
-					</el-menu-item>
-				</el-menu>
-			</el-col>
-		</el-row>
-		<el-row>
 			<el-col :span="24" style="position:relative">
 				<el-carousel trigger="click" height="380px">
 					<el-carousel-item v-for="item in 4" :key="item">
@@ -67,7 +51,7 @@
 					<el-row :gutter="20">
 						<el-col :span="12" v-for="n in 2" :key='n'>
 							<div class="pic_news_item">
-								<img src="../assets/index/2.gif" alt="">
+								<img src="../../assets/index/2.gif" alt="">
 								<p>5月6日小龙虾批发价格(北京农贸大市场)</p>	
 							</div>
 						</el-col>
@@ -96,39 +80,9 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-	.index{
-		max-width:1100px;
-		min-width:960px;
-		margin:0 auto;
-	}
-	.el-menu {
-		padding: 5px 20px;
-	}
 	
-	.logo {
-		display: inline-block;
-		width: 120px;
-		background: url('../assets/index/logo.png') no-repeat center center / 100px 50px;
-	}
 	
-	.logo:hover {
-		border-bottom: 5px solid transparent;
-	}
 	
-	.el-carousel__item h3 {
-		color: #475669;
-		font-size: 14px;
-		opacity: 0.75;
-		line-height: 150px;
-		margin: 0;
-	}
-	
-	.settings_menu {
-		position: relative;
-		right: 0;
-		bottom: -10px;
-		height: 50px;
-	}
 	
 	.settings_menu i {
 		margin-right: 5px;
@@ -194,7 +148,7 @@
 	.grid-content .content_icon{
 		width:100%;
 		min-height:200px;
-		background:url("../assets/index/1.gif") no-repeat center center / 200px 200px;
+		background:url("../../assets/index/1.gif") no-repeat center center / 200px 200px;
 	}
 	.grid-content .content_title{
 		margin:20px 0px;

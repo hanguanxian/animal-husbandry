@@ -88,7 +88,7 @@
         loginUrl: "/interface/user/checklogin",
         registUrl: "/interface/user/register",
         loginForm: {
-          power:"1",
+          power:"0",
           userName: 'zhangsir',
           password: '12121212'
         },
@@ -154,7 +154,7 @@
           self.$.post(self.loginUrl,self.loginForm,function(data,textStatus){
      					if("0" == data){
                 localStorage.setItem('msuserName',self.loginForm.userName);
-     						self.$router.push('/index');
+     						self.$router.push('/');
      					}else{
                 self.$message.error('用户名或密码错误');
      					}
@@ -175,7 +175,7 @@
      					if(1){
                 self.$message.success('注册成功');
                 localStorage.setItem('msuserName',self.registForm.userName);
-     						self.$router.push('/index');
+     						self.$router.push('/');
      					}else{
                 self.$message.error('错误');
      					}
