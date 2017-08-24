@@ -55,4 +55,7 @@ export default {
 	.el-carousel__indicators {
 		bottom: 80px;
 	}
+	.fullWidth {
+		width: 100%;
+	}
 </style>
