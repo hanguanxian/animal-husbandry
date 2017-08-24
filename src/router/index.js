@@ -30,6 +30,10 @@ export default new Router({
           component: resolve => require(['@/components/main/breedingLog.vue'], resolve),
         },
         {
+          path: "expert",
+          component: resolve => require(['@/components/main/Expert.vue'], resolve),
+        },
+        {
           path: "knowledge",
           component: resolve => require(['@/components/main/Knowledge.vue'], resolve),
         }

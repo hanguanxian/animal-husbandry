@@ -3,9 +3,10 @@ const len = area.length
 
 const utils = {
     //生成数据
-    arrRepeat(arr){
+    arrRepeat(arr,num){
+        num = num || 6;
         if(Object.prototype.toString.call(arr)=='[object Array]' && arr.length>0){
-            for(let i = 0 ;i<5;i++){
+            for(let i = 0 ;i<num;i++){
                 arr.push(arr[0])
             }
             return arr;
