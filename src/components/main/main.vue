@@ -1,7 +1,7 @@
 <template>
-    <div class='main container'>
+    <div class='main'>
         <div class="header">
-            <el-row>
+            <el-row class="container">
                 <el-col :span="24">
                     <el-menu :router="true" :default-active="$route.path" class="el-menu" mode="horizontal">
                         <el-menu-item index="/main/index" class="logo"><span>&nbsp;</span></el-menu-item>
@@ -19,7 +19,12 @@
             </el-row>
         </div>
         
-        <router-view class="body"></router-view>
+        <router-view class="body container"></router-view>
+        <el-row style="background:#262e39">
+			<el-col :span="24" class="footer">
+				copyright &copy;2016 All rights reserved.
+			</el-col>
+		</el-row>
     </div>
     
 </template>
@@ -30,6 +35,9 @@
             return {
 
             }
+        },
+        mounted(){
+            console.log(this.$route.path)
         }
     }
 </script>
@@ -41,19 +49,18 @@
         background:#f8f8f8;
         z-index:100;
     }
-    .header>.el-row{
+    .container{
         max-width:1100px;
         min-width:960px;
         margin:0 auto;
+    }
+    .header>.el-row{
         background:#f8f8f8;
     }
     .header>.el-row .el-menu{
         background:#f8f8f8;
     }
     .body{
-        max-width:1100px;
-        min-width:960px;
-        margin:0 auto;
         padding-top:70px;
     }
     .el-menu {
@@ -65,7 +72,6 @@
 		width: 120px;
 		background: url('../../assets/index/logo.png') no-repeat center center / 100px 50px;
 	}
-	
 	.logo:hover {
 		border-bottom: 5px solid transparent;
 	}
@@ -82,5 +88,12 @@
 		right: 0;
 		bottom: -10px;
 		height: 50px;
+	}
+
+    .footer{
+		height:100px;
+		line-height: 100px;
+		text-align:center;
+		color:#fff;
 	}
 </style>

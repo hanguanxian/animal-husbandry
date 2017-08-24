@@ -19,7 +19,7 @@
                         </div>
                         <div class="right">
                             <span class="item_label" v-html="item.label"></span>
-                            <span class="item_content" v-html="item.content"></span>
+                            <span class="item_content">{{overString(item.content)}}</span>
                         </div>
                     </el-col>
                 </el-row>
@@ -98,6 +98,11 @@
                     }
                 ]
 
+            }
+        },
+        methods:{
+            overString(val){
+                return val.length>45 && val.substring(0,45)+"..."
             }
         }
     }

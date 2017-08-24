@@ -43,9 +43,16 @@ const utils = {
         }
     },
     transArea(val){
-        return {
-            value:val.replace(/[^\d]/g,""),
-            label:val.replace(/\d/g,""),
+        if(val){
+            return {
+                value:val.replace(/[^\d]/g,""),
+                label:val.replace(/\d/g,""),
+            }
+        }else{
+            return {
+                value:"",
+                label:""
+            }
         }
     }
     

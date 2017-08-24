@@ -50,6 +50,7 @@ export default {
 	ul{
 		list-style:none;
 	}
+
 	/* 轮播图导航位置 */
 	.el-carousel__indicators {
 		bottom: 80px;

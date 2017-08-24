@@ -59,11 +59,7 @@
 				</div>
 			</el-col>
 		</el-row>
-		<el-row style="background:#262e39">
-			<el-col :span="24" class="footer">
-				copyright &copy;2016 All rights reserved.
-			</el-col>
-		</el-row>
+		
 	</div>
 </template>
 
@@ -204,10 +200,6 @@
 		text-align: center;
 	}
 
-	.footer{
-		height:100px;
-		line-height: 100px;
-		text-align:center;
-		color:#fff;
-	}
+	
+
 </style>
