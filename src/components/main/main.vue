@@ -9,7 +9,7 @@
                         <el-menu-item index="/main/monitor">环境监测</el-menu-item>
                         <el-menu-item index="/main/breedingLog">养殖日志</el-menu-item>
                         <el-menu-item index="/main/profit">经济效益</el-menu-item>
-                        <el-menu-item index="5">专家指导</el-menu-item>
+                        <el-menu-item index="/main/expert">专家指导</el-menu-item>
                         <el-menu-item index="/main/knowledge">知识库</el-menu-item>
                         <el-menu-item index="/information" class="settings_menu">
                             <i class="el-icon-setting"></i>配置管理
@@ -62,6 +62,7 @@
     }
     .body{
         padding-top:70px;
+        min-height:806px;
     }
     .el-menu {
 		padding: 5px 20px;
