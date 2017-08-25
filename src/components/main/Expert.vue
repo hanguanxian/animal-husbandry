@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="know_menu">
+        <div class="expert_menu">
             <div class="menu_item" 
                 v-for="(item,index) in menu" 
                 :key="index" 
@@ -12,15 +12,13 @@
             </div>
         </div>
         <div v-if="activeItem == 0">
-            <div class="know_group" v-for="(cate,index) in aquaculture" :key="index">
-                <div class="group_title">
-                    <span class="title_label" v-html="cate.label" style="font-size:18px"></span>
-                    <span class="showMore" style="font-size:14px">查看更多</span>
-                </div>
+            <div class="expert_group" v-for="(cate,index) in aquaculture" :key="index">
                 <el-row :gutter="20" class="group_body">
-                    <el-col :span="8" class="group_item" v-for="(item,index) in cate.children" :key="index">
+                    <el-col :span="12" class="group_item" v-for="(item,index) in cate.children" :key="index">
                         <div class="left">
-                            <img :src="item.img" alt="">
+                            <div class="avatar">
+                                <img :src="item.img" alt="">
+                            </div>
                         </div>
                         <div class="right">
                             <span class="item_label" v-html="item.label"></span>
@@ -33,7 +31,7 @@
         <div v-if="activeItem == 1" >
             <div class="know_group" style="padding-top:50px;">
                 <el-row :gutter="20" class="group_body">
-                    <el-col :span="8" class="group_item" v-for="(item,index) in feedList" :key="index">
+                    <el-col :span="12" class="group_item" v-for="(item,index) in feedList" :key="index">
                         <div class="left">
                             <img :src="item.img" alt="">
                         </div>
@@ -131,23 +129,48 @@
                 ],23),
                 drugList:this.utils.arrRepeat([
                     {label:"药品",img:require("../../assets/knowledge/crab02.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏色彩缤纷，延续着春花之娇，色彩缤纷，延续着春花之娇，花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"}
-                ],23)
+                ],23),
+                expertList:[]
 
             }
         },
         methods:{
             overString(val){
                 return val.length>45 && val.substring(0,45)+"..."
+            },
+            //获取专家列表
+            getExpertList(){
+                const self = this;
+                self.$.get("/IntelligentAgriculture/expert/expertList",function(res){
+                    console.log(res)
+                })
+            },
+            //获取问题列表
+            getQsList(){
+                const self = this;
+                self.$.get("/IntelligentAgriculture/expert/getAllNewQuestions",{page:1},function(res){
+                    console.log(JSON.parse(res))
+                })
+            },
+            //获取热门问题
+            getHotQsList(){
+                const self = this;
+                self.$.get("/IntelligentAgriculture/expert/getAllHostQuestions",{page:1},function(res){
+                    console.log(JSON.parse(res))
+                })
             }
         },
         mounted(){
-            console.log(this.feedList)
-        }
+            const self = this;
+            self.getExpertList();
+            self.getQsList();
+            self.getHotQsList();
+;        }
     }
 </script>
 
 <style scoped>
-    .know_menu{
+    .expert_menu{
         display:flex;
         justify-content:space-around;
         width:100%;
@@ -173,33 +196,40 @@
         font-family:'Cambria'
     }
 
-    .know_group .group_title{
+    .expert_group .group_title{
         display:flex;
         justify-content:space-between;
         padding:20px 10px;
     }
-    .know_group .group_body .group_item{
+    .expert_group .group_body .group_item{
         display:flex;
-        height:120px;
+        margin-top:50px;
+        min-height:120px;
         overflow:hidden; 
         text-overflow:ellipsis;
     }
-    .know_group .group_body .group_item .left{
+
+    .expert_group .group_body .group_item .left{
         margin-right:16px;
     }
-    .know_group .group_body .group_item .left img{
-        width:100px;
-        height:76px;
-        border:1px solid #c7c7c7;
+    .expert_group .group_body .group_item .left .avatar{
+         width:170px;
+         height:240px;
+         background-color:#4c92e4;
     }
-    .know_group .group_body .group_item .right{
+    .expert_group .group_body .group_item .left img{
+        width:100%;
+        height:100%;
+       
+    }
+    .expert_group .group_body .group_item .right{
         display:flex;
         flex-direction:column;
     }
-    .know_group .group_body .group_item .right .item_label{
+    .expert_group .group_body .group_item .right .item_label{
         font-size:16px;
     }
-    .know_group .group_body .group_item .right .item_content{
+    .expert_group .group_body .group_item .right .item_content{
         overflow:hidden; 
         text-overflow:ellipsis;
         display:-webkit-box; 

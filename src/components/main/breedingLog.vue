@@ -244,6 +244,7 @@
 </template>
 
 <script>
+    import FileSaver from "file-saver"
     export default {
         data() {
             return {
@@ -584,10 +585,10 @@
                             // //投放物名称
                             throw_image:self.form_daily.picList,
                             // //图片对象集合
-                            throw_activetime:self.form_daily.date
+                            throw_activetime:self.form_daily.date.toLocaleDateString()
                             // //活动时间
                         };
-                        self.$.post("/IntelligentAgriculture/throwManage/throw?page=1&kind=throw",data,function(res){
+                        self.$.post("/breedingLog/throw",data,function(res){
                             console.log(res)
                         })
                     } else {
@@ -621,7 +622,7 @@
                            //录入的数据范围
                            files:self.form_polling.picList,
                            //图片对象集合
-                           activeTime:self.form_polling.date,
+                           activeTime:self.form_polling.date.toLocaleDateString(),
                            //活动时间
                        };
                        self.$.post("/breedingLog/patrol",data,function(res){
@@ -673,9 +674,17 @@
                     endTime:self.form_export.endTime.toLocaleDateString(),
                     content_select:self.form_export.exportType
                 }
-                self.$.post("IntelligentAgriculture/breedingLog/export",data,function(res){
-                    console.log(res)
-                    self.resetForm(formName);
+                self.$.get("/IntelligentAgriculture/breedingLog/export",data,function(res,textStatus,xhr){
+ 
+                    var blob = new Blob([res], {type: "application/vnd.ms-excel;charset=utf-8"});
+                    FileSaver.saveAs(blob, "日志.xls")
+                    // Temp = document.createElement("a");
+                    //  console.log(blob)
+                    // Temp.href = window.URL.createObjectURL(blob);
+                    // Temp.download = "日志.xls";
+                    // self.$('body').append(Temp);
+                    // Temp.click();
+                    // self.resetForm(formName);
                     self.exportDialogShow = false
                 })
                 
