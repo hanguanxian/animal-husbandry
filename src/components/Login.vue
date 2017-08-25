@@ -152,10 +152,11 @@
       self.$refs.loginForm.validate((valid) => {
         if (valid) {
           self.$.post(self.loginUrl,self.loginForm,function(data,textStatus){
-     					if("0" == data){
+              data = JSON.parse(data);
+     					if(data.resCode == 1){
                 localStorage.setItem('msuserName',self.loginForm.userName);
-     						self.$router.push('/index');
-     					}else{
+     						self.$router.push('/main/index');
+     					}else if(data.resCode == 0){
                 self.$message.error('用户名或密码错误');
      					}
  				   })
@@ -172,12 +173,13 @@
         if (valid) {
           delete self.registForm.passwordConfirm;
           self.$.post(self.registUrl,self.registForm,function(data,textStatus){
-     					if(1){
+              data = JSON.parse(data);
+     					if(data.resCode == 1){
                 self.$message.success('注册成功');
                 localStorage.setItem('msuserName',self.registForm.userName);
-     						self.$router.push('/index');
-     					}else{
-                self.$message.error('错误');
+     						self.$router.push('/');
+     					}else if(data.resCode == 0){
+                self.$message.error('注册失败');
      					}
  				   })
         }

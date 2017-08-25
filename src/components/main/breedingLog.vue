@@ -1,118 +1,132 @@
 <template>
     <div class="breedingLog">
-        <el-form ref="swithType" label-width="80px">
-            <el-form-item label="活动主题">
-                <el-radio-group v-model="addTheme">
-                    <el-radio label="0">日常投放</el-radio>
-                    <el-radio label="1">巡视检查</el-radio>
-                </el-radio-group>
-            </el-form-item>
-        </el-form>
-        <el-form  v-show="addTheme=='0'" ref="form_daily" :rules="daily_rule" :model="form_daily" label-width="80px">
-            <el-form-item prop="pond" label="塘口选择">
-                <el-select v-model="form_daily.pond"  placeholder="请选择塘口">
-                    <el-option v-for="(pond,index) in formData.pondList" :label="pond.name" :value="pond.value" :key="index"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item prop="cate" label="投放类别">
-                <el-cascader
-                    :options="formData.putCateList"
-                    v-model="form_daily.cate">
-                </el-cascader>
-            </el-form-item>
-            <el-form-item :prop="'goods.' + index + '.value'" v-for="(item,index) in form_daily.goods" :label="index == 0 ? '投放物品' :''" :key="index">
-                <el-input v-model="item.value" placeholder="投放物名称"></el-input>
-                <el-button v-if="index == form_daily.goods.length-1" type='primary' @click="addGoods">增加</el-button>
-                <el-button v-if="form_daily.goods.length != 1" type='danger' @click="delGoods(index)">删除</el-button>
-            </el-form-item>
+        
+        <el-row class="actTheme" style="border-bottom:1px solid #9b9b9b;">
+            <el-col :span="12" style="padding-top:20px;padding-bottom:60px;">
+                <el-form ref="form_daily" :rules="daily_rule" :model="form_daily" label-width="90px">
+                    <el-form-item>
+                        <template slot="label"><span class="theme_title">日常投放</span></template>
+                    </el-form-item>
+                    <el-form-item prop="pond" label="塘口选择">
+                        <el-select v-model="form_daily.pond"  placeholder="请选择塘口">
+                            <el-option v-for="(pond,index) in formData.pondList" :label="pond.name" :value="pond.value" :key="index"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item prop="cate" label="投放类别">
+                        <el-cascader
+                            :options="formData.putCateList"
+                            v-model="form_daily.cate">
+                        </el-cascader>
+                    </el-form-item>
+                    <el-form-item :prop="'goods.' + index + '.value'" v-for="(item,index) in form_daily.goods" :label="index == 0 ? '投放物品' :''" :key="index">
+                        <el-input v-model="item.value" placeholder="投放物名称"></el-input>
+                        <el-button v-if="index == form_daily.goods.length-1" type='primary' @click="addGoods">增加</el-button>
+                        <el-button v-if="form_daily.goods.length != 1" type='danger' @click="delGoods(index)">删除</el-button>
+                    </el-form-item>
 
-            <el-form-item prop="money" label="投放总额">
-                <el-input placeholder="总金额" v-model="form_daily.money">
-                    <template slot="append">元</template>
-                </el-input>
-            </el-form-item>
-            <el-form-item prop="picList" label="上传图片">
-                <el-upload
-                    class="upload-demo"
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    :file-list="form_daily.picList">
-                    <el-button size="small" type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                </el-upload>
-            </el-form-item>
-            <el-form-item  prop="date" label="活动时间">
-                <el-date-picker
-                    v-model="form_daily.date"
-                    type="datetime"
-                    placeholder="选择日期时间">
-                </el-date-picker>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="onDaily('form_daily')">提交</el-button>
-                <el-button type="danger" @click="resetForm('form_daily')">重置</el-button>
-            </el-form-item>
-        </el-form>
+                    <el-form-item prop="money" label="投放总额">
+                        <el-input placeholder="总金额" v-model="form_daily.money">
+                            <template slot="append">元</template>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item prop="picList" label="上传图片">
+                        <el-upload
+                            class="upload-demo"
+                            action="https://jsonplaceholder.typicode.com/posts/"
+                            :file-list="form_daily.picList">
+                            <el-button size="small" type="primary">点击上传</el-button>
+                            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                        </el-upload>
+                    </el-form-item>
+                    <el-form-item  prop="date" label="活动时间">
+                        <el-date-picker
+                            v-model="form_daily.date"
+                            type="datetime"
+                            placeholder="选择日期时间">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item class="btn_group">
+                        <el-button type="primary" @click="onDaily('form_daily')">提交</el-button>
+                        <el-button type="danger" @click="resetForm('form_daily')">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-col>
+            <span class="boundary"></span>
+            <el-col :span="12" style="padding-left:40px;padding-top:20px;padding-bottom:60px;">
+                <el-form ref="form_polling" :model="form_polling" :rules="polling_rule" label-width="80px">
+                    <el-form-item>
+                        <template slot="label"><span class="theme_title">巡视检查</span></template>
+                    </el-form-item>
+                    <el-form-item prop="pond" label="塘口选择">
+                        <el-select v-model="form_polling.pond" placeholder="请选择塘口">
+                            <el-option v-for="(pond,index) in formData.pondList" :label="pond.name" :value="pond.value" :key="index"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item prop="content" label="巡视内容">
+                        <el-cascader
+                            :options="formData.polling_content"
+                            v-model="form_polling.content">
+                        </el-cascader>
+                    </el-form-item>
+                    <el-form-item prop="inputData" label="录入数据">
+                        <el-radio-group v-model="form_polling.inputData">
+                            <el-radio label="yes">是</el-radio>
+                            <el-radio label="">否</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item v-if="form_polling.inputData === 'yes'">
+                        <el-form-item prop="selectData" label="数据类型" style="display:inline-block">
+                            <el-select v-model="form_polling.selectData" placeholder="请选择" @change="watchDataType">
+                                <el-option
+                                v-for="item in formData.dataType"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item prop="num" label="数值" style="margin-top:10px">
+                            <el-input placeholder="请输入数值" v-model="form_polling.num" style="width:194px"></el-input>
+                            <span>{{range}}</span>
+                        </el-form-item>
+                    </el-form-item>
+                    <el-form-item prop="picList" label="上传图片">
+                        <el-upload
+                            class="upload-demo"
+                            action="https://jsonplaceholder.typicode.com/posts/"
+                            :file-list="form_polling.picList">
+                            <el-button size="small" type="primary">点击上传</el-button>
+                            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                        </el-upload>
+                    </el-form-item>
+                    <el-form-item prop="date" label="活动时间">
+                        <el-date-picker
+                            v-model="form_polling.date"
+                            type="datetime"
+                            placeholder="选择日期时间">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item class="btn_group">
+                         <el-button type="primary" @click="onPolling('form_polling')">提交</el-button>
+                        <el-button type="danger" @click="resetForm('form_polling')">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-col>
+        </el-row>
+        
 
 
-        <el-form v-show="addTheme=='1'" ref="form_polling" :rules="polling_rule" :model="form_polling" label-width="80px">
-            <el-form-item prop="pond" label="塘口选择">
-                <el-select v-model="form_polling.pond" placeholder="请选择塘口">
-                    <el-option v-for="(pond,index) in formData.pondList" :label="pond.name" :value="pond.value" :key="index"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item prop="content" label="巡视内容">
-                <el-cascader
-                    :options="formData.polling_content"
-                    v-model="form_polling.content">
-                </el-cascader>
-            </el-form-item>
-            <el-form-item prop="inputData" label="录入数据">
-                <el-radio-group v-model="form_polling.inputData">
-                    <el-radio label="yes">是</el-radio>
-                    <el-radio label="">否</el-radio>
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item v-if="form_polling.inputData === 'yes'">
-                <el-form-item prop="selectData" label="数据类型" style="display:inline-block">
-                    <el-select v-model="form_polling.selectData" placeholder="请选择" @change="watchDataType">
-                        <el-option
-                        v-for="item in formData.dataType"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item prop="num" label="数值" style="display:inline-block">
-                    <el-input placeholder="请输入数值" v-model="form_polling.num"></el-input>
-                    <span>{{range}}</span>
-                </el-form-item>
-            </el-form-item>
-            <el-form-item prop="picList" label="上传图片">
-                <el-upload
-                    class="upload-demo"
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    :file-list="form_polling.picList">
-                    <el-button size="small" type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                </el-upload>
-            </el-form-item>
-            <el-form-item prop="date" label="活动时间">
-                <el-date-picker
-                    v-model="form_polling.date"
-                    type="datetime"
-                    placeholder="选择日期时间">
-                </el-date-picker>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="onPolling('form_polling')">提交</el-button>
-                <el-button type="danger" @click="resetForm('form_polling')">重置</el-button>
-            </el-form-item>
-        </el-form>
+        <el-row>
+            <el-col :span="24">
+                <div  class="myDaily">
+                    <span>我的养殖日志</span>
+                    <el-button size="small" type="warning" @click="exportDialogShow = true">导出日志</el-button>
+                </div>
+            </el-col>
+        </el-row>
 
         <el-tabs v-model="kind"  @tab-click="swithKind">
-            <el-tab-pane label="日常投放" name="throw">
-                <el-button type="warning" @click="exportDialogShow = true">导出日志</el-button>
+            <el-tab-pane label="日常投放" name="throw" style="padding:20px">
                 <el-table
                     :data="formData.tb_daily"
                     style="width: 100%">
@@ -149,15 +163,15 @@
                         label="投放时间">
                 </el-table-column>
                 </el-table>
-                    <el-pagination
+                <el-pagination
+                    class="pagina"
                     :current-page.sync="daily.curPage"
                     :page-size="100"
                     layout="total, prev, pager, next"
                     :total="1000">
                 </el-pagination>
             </el-tab-pane>
-            <el-tab-pane label="巡视检查" name="patrol">
-                <el-button type="warning" @click="exportDialogShow = true">导出日志</el-button>
+            <el-tab-pane label="巡视检查" name="patrol" style="padding:20px">
                 <el-table
                     :data="formData.tb_polling"
                     style="width: 100%">
@@ -189,7 +203,8 @@
                         label="投放时间">
                 </el-table-column>
                 </el-table>
-                    <el-pagination
+                <el-pagination
+                    class="pagina"
                     :current-page.sync="polling.curPage"
                     :page-size="100"
                     layout="total, prev, pager, next"
@@ -198,18 +213,18 @@
             </el-tab-pane>
         </el-tabs>
         <el-dialog title="导出日志" :visible.sync="exportDialogShow">
-            <el-form :model="form_export" label-width="120px">
+            <el-form ref="form_export" :model="form_export" label-width="120px">
                 <el-form-item prop="startTime" label="起始时间">
                     <el-date-picker
                         v-model="form_export.startTime"
-                        type="datetime"
+                        type="date"
                         placeholder="选择日期时间">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item prop="endTime" label="结束时间">
                     <el-date-picker
                         v-model="form_export.endTime"
-                        type="datetime"
+                        type="date"
                         placeholder="选择日期时间">
                     </el-date-picker>
                 </el-form-item>
@@ -222,7 +237,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="exportDialogShow = false">取 消</el-button>
-                <el-button type="primary" @click="exportDialogShow('form_export')">确 定</el-button>
+                <el-button type="primary" @click="exportTable('form_export')">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -255,7 +270,7 @@
                     content:[],
                     inputData:"",
                     selectData:'',
-                    num:0,
+                    num:"",
                     picList:[],
                     date:new Date()
                 },
@@ -424,9 +439,7 @@
                             }]
                         }
                     ],
-                    dataType:[
-                        {label:"PH",value:"ph",range:">2.3ml"},
-                    ],
+                    dataType:[],
                     tb_daily:this.utils.arrRepeat([{
                         id:"0",
                         name:"测试五",
@@ -445,9 +458,9 @@
                         date:"2018-08-19 08:00"
                     }]),
                     exportType:[
-                        {label:"全部",value:"all"},
-                        {label:"日常投放",value:"throw"},
-                        {label:"巡视检查",value:"patrol"},
+                        {label:"全部",value:"全部"},
+                        {label:"日常投放",value:"日常投放"},
+                        {label:"巡视检查",value:"巡视检查"},
                     ]
                 },
                 addTheme:"0",
@@ -464,9 +477,8 @@
             }
         },
         methods: {
-            /* 页面方法 */
-            //当数据类型改变时 切换range
-            watchDataType(val){
+            /* 方法 */ 
+           watchDataType(val){
                 const self = this;
                 for(const item of self.formData.dataType){
                     if(val==item.value){
@@ -474,6 +486,7 @@
                     }
                 }
             },
+            /* 页面方法 */
             //新增物品
             addGoods(){
                 const self = this;
@@ -490,15 +503,19 @@
             //获取当前用户塘口信息
             getPonds(){
                 const self = this;
-                self.$.get("/IntelligentAgriculture/PondInfo/showPondinfos",function(res){
-                    res = JSON.parse(res);
-                    console.log(res)
-                    self.formData.pondList = [];
-                    for(const item of res.pondinfo){
-                        self.formData.pondList.push({
-                            name:item.pondName,
-                            value:item.id
-                        })
+                self.$.get("/IntelligentAgriculture/PondInfo/showPondinfos",function(data){
+                    data = JSON.parse(data);
+                    console.log(data)
+                    if(data.resCode == 1){
+                        self.formData.pondList = [];
+                        for(const item of data.res){
+                            self.formData.pondList.push({
+                                name:item.pondName,
+                                value:item.id
+                            })
+                        }
+                    }else if(data.resCode == 0){
+                        self.$message.error('获取塘口信息失败');
                     }
                 })
             },
@@ -582,39 +599,38 @@
             onPolling(formName){
                 const self = this;
                 self.$refs[formName].validate((valid) => {
-                    if(valid){
-                        let data = {
-                            pondId:self.form_polling.pond,
-                            //水域唯一标识
-                            patrolTarget:self.form_polling.content[0],
-                            //巡视检查对象
-                            patrolContentType1:self.form_polling.content[1] || "",
-                            //当对象是水质时，对应的类别;
-                            patrolContentType2: self.form_polling.content[2] || "",
-                            //当对象是螃蟹/虾/鱼时，对应的类别
-                            patrolContentStatus: self.form_polling.content[3] || "",
-                            //状态内容，例如偏低、正常、偏高
-                            patrolTargetPart:self.form_polling.content[4] || "",
-                            //当选择“体征”时，弹出的部位选择框，因此对应的是螃蟹/虾/鱼的部位
-                            //录入数据：
-                            islog: self.form_polling.inputData == 'yes' ? 'yes':'no', //对应是否录入数据的元素标签值，取值为yes或no
-                            catalog:self.form_polling.selectData,
-                            //录入的数据类型
-                            Ranges:self.form_polling.num,
-                            //录入的数据范围
-                            files:self.form_polling.picList,
-                            //图片对象集合
-                            activeTime:self.form_polling.date,
-                            //活动时间
-                        };
-                        self.$.post("/breedingLog/patrol",data,function(res){
-                            console.log(res)
-                        })
-                    }else{
-                        return false;
-                    }
+                   if(valid){
+                       let data = {
+                           pondId:self.form_polling.pond,
+                           //水域唯一标识
+                           patrolTarget:self.form_polling.content[0],
+                           //巡视检查对象
+                           patrolContentType1:self.form_polling.content[1] || "",
+                           //当对象是水质时，对应的类别;
+                           patrolContentType2: self.form_polling.content[2] || "",
+                           //当对象是螃蟹/虾/鱼时，对应的类别
+                           patrolContentStatus: self.form_polling.content[3] || "",
+                           //状态内容，例如偏低、正常、偏高
+                           patrolTargetPart:self.form_polling.content[4] || "",
+                           //当选择“体征”时，弹出的部位选择框，因此对应的是螃蟹/虾/鱼的部位
+                           //录入数据：
+                           islog: self.form_polling.inputData == 'yes' ? 'yes':'no', //对应是否录入数据的元素标签值，取值为yes或no
+                           catalog:self.form_polling.selectData,
+                           //录入的数据类型
+                           Ranges:self.form_polling.num,
+                           //录入的数据范围
+                           files:self.form_polling.picList,
+                           //图片对象集合
+                           activeTime:self.form_polling.date,
+                           //活动时间
+                       };
+                       self.$.post("/breedingLog/patrol",data,function(res){
+                           console.log(res)
+                       })
+                   }else{
+                       return false;
+                   }
                 })
-                
             },
             //重置参数
             resetForm(formName){
@@ -634,7 +650,7 @@
                     kind: self.kind
                 }
                 console.log(data)
-                self.$.post("/IntelligentAgriculture/system/showMyLog",data,function(res){
+                self.$.get("/IntelligentAgriculture/system/showMyLog",data,function(res){
                     console.log(res)
                 })
             },
@@ -653,13 +669,14 @@
             exportTable(formName){
                 const self = this;
                 let data = {
-                    startTime:self.form_export.startTime,
-                    endTime:self.form_export.endTime,
+                    startTime:self.form_export.startTime.toLocaleDateString(),
+                    endTime:self.form_export.endTime.toLocaleDateString(),
                     content_select:self.form_export.exportType
                 }
                 self.$.post("IntelligentAgriculture/breedingLog/export",data,function(res){
                     console.log(res)
-                    self.resetForm(formName)
+                    self.resetForm(formName);
+                    self.exportDialogShow = false
                 })
                 
             }
@@ -672,13 +689,48 @@
             self.getDailyInputType();
             self.getPollingType();
             self.getInputDataType();
+            self.getTableDate()
         }
     }
 </script>
 
 <style scoped>
-     .el-input{
-         width:300px;
-         margin-right:10px;
-     }
+    .el-input{
+        width:300px;
+        margin-right:10px;
+    }
+    .actTheme{
+        position:relative;
+    }
+    .btn_group{
+        position:absolute;
+        bottom:0;
+    }
+    .theme_title{
+        width:90px !important;
+        font-size:16px;
+        font-weight:600;
+        color:#333;
+    }
+    .boundary{
+        position:absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width:1px;
+        height:100%;
+        background-color:#9b9b9b;
+    }
+    .myDaily{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:20px 0px;
+        font-size:16px;
+        font-weight:600;
+    }
+    .pagina{
+        text-align:center;
+        padding-top:20px;
+    }
 </style>

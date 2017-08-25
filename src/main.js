@@ -5,11 +5,9 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import jquery from 'jquery'
-
+import utils from './assets/utils'
 import axios from './axiosConfig.js';
 import 'element-ui/lib/theme-default/index.css'
-import utils from "./assets/utils"
-
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios;

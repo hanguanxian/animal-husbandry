@@ -36,11 +36,11 @@ module.exports = {
         }
       },
       '/IntelligentAgriculture': {
-        target: 'http://210.28.188.103:8080',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/IntelligentAgriculture': '/IntelligentAgriculture'
-        }
+         target: 'http://210.28.188.103:8080',
+         changeOrigin: true,
+         pathRewrite: {
+           '^/IntelligentAgriculture': '/IntelligentAgriculture'
+         }
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
