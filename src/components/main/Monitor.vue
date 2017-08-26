@@ -79,7 +79,7 @@
           </el-form-item>
         </el-form>
       </el-row>
-      <IEcharts  class="echarts" :option="bar"></IEcharts>
+      <IEcharts class="echarts" :option="option"></IEcharts>
       <button @click="doRandom">Random</button>
   </el-row >
 </template>
@@ -101,7 +101,6 @@
         facid: '',
         comid: ''
       },
-      showTangKouUrl:'/interface/dataDisplay/showTangKou',
       tangKous: [],
       tangKou: {},
       currentData: {
@@ -117,29 +116,71 @@
         startTime: '',
         endTime: '',
       },
-      bar: {
+      option: {
         title: {
           text: '水产传感数器采集数据'
         },
-        tooltip: {},
-        xAxis: {
-          type: 'time',
-          splitLine: {
-              show: false
-          }
-        },
-        yAxis: {
+        tooltip: {
+    			trigger : 'axis',
+    			position : function(pt) {
+    				return [ pt[0], '10%' ]; //提示框显示的内容 pt[0]跟着鼠标的位置
+    			},
+    			formatter : function(params) {
+    				var data = '';
+    				var color = '';
+    				for (var i = 0; params[i] != null; i++) {
+    					color = "<span style='width: 10px;height: 10px;background-color: "+params[i].color+";float:left;margin-top: 6px;'></span>"
+    					data += (params[i].name + '<br/>' + color + " "
+    							+ params[i].seriesName + ': ' + params[i].value + '<br/><br/>');
+    				}
+    				return data;
+    			}
+    		},
+        legend : {
+  				data : [ "水温", "溶解氧", "ph" ], //折线名字
+  				selected : {
+  					"水温" : true,
+  					"溶解氧" : false,
+  					"ph" : false
+  				}
+  			},
+        axisPointer : {
+				  link : {
+  					xAxisIndex : 'all'
+  				}
+  			},
+        dataZoom : [
+					{
+						show : true,
+					},
+					{ //移动滑块
+						start : 0,
+						end : 100,
+						handleIcon : 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+						handleSize : '80%',
+						handleStyle : {
+							color : '#fff',
+							shadowBlur : 3,
+							shadowColor : 'rgba(0, 0, 0, 0.6)',
+							shadowOffsetX : 2,
+							shadowOffsetY : 2
+						},
+				}],
+  			xAxis : [{
+          type: 'category',
+			    boundaryGap: false,
+			    gridIndex: 0,
+			    data: [],
+			    axisLine:{onZero:false}
+        }],
+  			yAxis : [{
           type: 'value',
-          boundaryGap: [0, '100%'],
-          splitLine: {
-              show: false
-          }
-        },
-        series: [{
-          name: 'Sales',
-          type: 'line',
-          data: []
-        }]
+			    boundaryGap: false,
+			    gridIndex: 0,
+          min : 4,
+			    splitNumber: 5
+        }],
+        series: []
       }
     }),
     created() {
@@ -147,7 +188,6 @@
       //this.tangKou = {fid:1,cid:2,sid:'0102',order: '',name: '固城湖塘口1'};
       this.tangKousForm.areacode = '0102';//TODO 登陆获取地区
       this.showTangKou();
-      this.dateTimeRange(60 * 60 * 24);
     },
     methods: {
       doRandom() {
@@ -160,7 +200,8 @@
       },
       showTangKou(){
         const self = this;
-        self.$.post(self.showTangKouUrl,self.tangKousForm,function(res){
+        let data = {areacode: self.tangKousForm.areacode}
+        self.$.post('/IntelligentAgriculture/dataDisplay/showpound',data,function(res){
           //TODO 塘口列表展示 tangKous 赋值
           self.tangKous = [
             {fid:1,cid:2,sid:'0102',order: '',name: '固城湖塘口1'},
@@ -173,6 +214,7 @@
             {fid:7,cid:2,sid:'0',order: '43',name: '江宁基地'}];
             self.tangKouSelect(0);
             self.tabName = self.tangKous[0].name;
+            self.dateTimeRange(60 * 60 * 24);
         })
       },
       tangKouSelect(index){//塘口选择
@@ -181,44 +223,81 @@
       queryCurrentData(){
         const self = this;
         let data = {
-          factoryid: self.tangKou.fid,
+          facid: self.tangKou.fid,
           comid: self.tangKou.cid,
           senid: self.tangKou.sid
         };
-        self.$.post("/interface/dataDisplay/queryCurrentData",data,function(res){
-          console.log(res);
-          self.currentData.temperature = Math.floor(Math.random() * (40 + 1 - 20) + 20);
-          self.currentData.oxygen = Math.floor(Math.random() * (20 + 1 - 5) + 5);
-          self.currentData.ph = Math.floor(Math.random() * (9 + 1 - 4) + 9);
+        self.$.post("/IntelligentAgriculture/dataDisplay/queryCurrentData",data,function(res){
+          let result = JSON.parse(res);
+          for (var i = 0; i < result.res.length; i++) {
+            switch (result.res[i].type) {
+              case "water_temp_1":
+                self.currentData.temperature = result.res[i].value || '';
+                break;
+              case "ph_1":
+                self.currentData.ph = result.res[i].value || '';
+                break;
+              case "do2_1":
+                self.currentData.oxygen = result.res[i].value || '';
+                break;
+              default:
+
+            }
+          }
         })
       },
-      queryHistoryData(){
+      queryHistoryData(value){
+        const self = this;
+        let data = {
+          facid: self.tangKou.fid,
+          comid: self.tangKou.cid,
+          senid: self.tangKou.sid,
+          startTime: self.chartForm.startTime,
+          endTime: self.chartForm.endTime
+        };
+        let dataUrl = "/IntelligentAgriculture/dataDisplay/queryHistoryData";
+        if(value > (60 * 60 * 24 * 30)) {
+          dataUrl = "/IntelligentAgriculture/dataDisplay/queryIntegration";
+        }
+        self.$.post(dataUrl,data,function(res){
+          let result = JSON.parse(res);
+          self.option.xAxis[0].data = result.res.do_time;
+          for (var i = 0; i < self.option.legend.data.length; i++) {
+            if(self.option.legend.data[i] == "ph"){
+              self.initSerie('ph',result.res.ph_ph,0);
+    				}else if(self.option.legend.data[i] == "溶解氧"){
+              self.initSerie('溶解氧',result.res.do_do,0);
+    				}else if(self.option.legend.data[i] == "水温"){
+              self.initSerie('水温',result.res.do_temp,0);
+    				}
+          }
+        })
+      },
+      queryAppointedTime(){
         const self = this;
         let data = {
           factoryid: self.tangKou.fid,
           comid: self.tangKou.cid,
           senid: self.tangKou.sid,
           startTime: self.chartForm.startTime,
-          endTime: self.chartForm.endTime
+          endTime: self.chartForm.endTime,
+          startClock: '',
+          endClock: ''
         };
-        self.$.post("/interface/dataDisplay/queryHistoryData",data,function(res){
+
+        self.$.post('/IntelligentAgriculture/dataDisplay/queryAppointedTime',data,function(res){
           console.log(res);
-          //self.bar.series[0].data = self.randomData(10);
         })
       },
-      queryIntegration(){
-        const self = this;
-        let data = {
-          factoryid: self.tangKou.fid,
-          comid: self.tangKou.cid,
-          senid: self.tangKou.sid,
-          startTime: self.chartForm.startTime,
-          endTime: self.chartForm.endTime
-        };
-        self.$.post("/interface/dataDisplay/queryIntegration",data,function(res){
-          console.log(res);
-          //self.bar.series[0].data = self.randomData(15);
-        })
+      initSerie(name,data,index) {
+        let serie = {
+          name: name,
+          type: 'line',
+          xAxisIndex: index,
+          yAxisIndex: index,
+          data: data
+        }
+        this.option.series.push(serie);
       },
       areaChange(arrValue) {//地区选择
         const self = this;
@@ -231,29 +310,8 @@
         self.chartForm.endTime = now.format("yyyy-MM-dd hh:mm:ss");
         self.chartForm.startTime = new Date(now.getTime() - value*1000).format("yyyy-MM-dd hh:mm:ss");
         console.log(self.chartForm);
-        self.randomData(value);
         self.queryCurrentData();
-        if(value < 60 * 60 * 24 * 30) {
-          self.queryHistoryData();
-        } else {
-          self.queryIntegration();
-        }
-      },
-      randomData(loop) {
-        // let data = [];
-        // let startTime = new Date(this.chartForm.startTime).getTime();
-        // let endTime = new Date(this.chartForm.endTime).getTime();
-        // let step = (endTime - startTime)/loop;
-        // for (var i = 0; i < loop; i++) {
-        //   let tempDate = new Date(startTime + i * step);
-        //   let temp = {
-        //       name: tempDate.toLocaleString(),
-        //       value: Math.floor(Math.random() * (9 + 1 - 4) + 9)
-        //   }
-        //   data.push(temp);
-        // }
-        // console.log(data);
-        // return data;
+        self.queryHistoryData(value);
       },
       onClick() {
       }
