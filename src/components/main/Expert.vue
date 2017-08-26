@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="know_menu">
-            <div class="menu_item" 
-                v-for="(item,index) in menu" 
-                :key="index" 
+            <div class="menu_item"
+                v-for="(item,index) in menu"
+                :key="index"
                 :class="index == activeItem?'active':''"
                 @click="activeItem = index"
             >
@@ -61,10 +61,10 @@
             </div>
         </div>
         <div>
-        
+
         </div>
         <div>
-        
+
         </div>
     </div>
 </template>
@@ -181,7 +181,7 @@
     .know_group .group_body .group_item{
         display:flex;
         height:120px;
-        overflow:hidden; 
+        overflow:hidden;
         text-overflow:ellipsis;
     }
     .know_group .group_body .group_item .left{
@@ -200,14 +200,14 @@
         font-size:16px;
     }
     .know_group .group_body .group_item .right .item_content{
-        overflow:hidden; 
+        overflow:hidden;
         text-overflow:ellipsis;
-        display:-webkit-box; 
+        display:-webkit-box;
         -webkit-box-orient:vertical;
-        -webkit-line-clamp:3; 
+        -webkit-line-clamp:3;
         font-size:12px;
     }
-   
+
 
 
 </style>
