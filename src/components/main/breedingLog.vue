@@ -33,7 +33,8 @@
                         <el-upload
                             class="upload-demo"
                             action=""
-                            :file-list="form_daily.picList">
+                            :file-list="form_daily.picList"
+                            :before-upload="form_daily_hold">
                             <el-button size="small" type="primary">点击上传</el-button>
                             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                         </el-upload>
@@ -94,7 +95,9 @@
                         <el-upload
                             class="upload-demo"
                             action=""
-                            :file-list="form_polling.picList">
+                            :file-list="form_polling.picList"
+                            :before-upload="form_polling_hold"
+                            >
                             <el-button size="small" type="primary">点击上传</el-button>
                             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                         </el-upload>
@@ -588,11 +591,21 @@
                     }
                 })
             },
+            //拦截图片
+            form_daily_hold(file){
+                this.form_daily.picList.push(file);
+                return false;
+            },
+            form_polling_hold(file){
+                this.form_polling.picList.push(file);
+                return false;
+            },
             //提交日志
             onDaily(formName){
                 const self = this;
                 self.$refs[formName].validate((valid) => {
                     if (valid) {
+                        console.log(self.form_daily)
                         let throw_name = [];
                         self.form_daily.goods.forEach((item)=>{return item.value && throw_name.push(item.value)});
                         throw_name = throw_name.join(",")
@@ -607,11 +620,12 @@
                             // //投放物名称
                             throw_price_all:self.form_daily.money,
                             //价格
-                            throw_image:self.form_daily.picList,
+                            // throw_image:self.form_daily.picList,
                             // //图片对象集合
                             throw_activetime:self.form_daily.date.toLocaleDateString()
                             // //活动时间
                         };
+                        console.log(data)
                         self.$.post("/IntelligentAgriculture/breedingLog/throw",data,function(res){
                             console.log(res)
                         })
