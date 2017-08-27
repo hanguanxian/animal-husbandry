@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="expert_menu">
-            <div class="menu_item" 
-                v-for="(item,index) in menu" 
-                :key="index" 
+            <div class="menu_item"
+                v-for="(item,index) in menu"
+                :key="index"
                 :class="index == activeItem?'active':''"
                 @click="activeItem = index"
             >
@@ -17,22 +17,22 @@
                     <el-col :span="12" class="group_item" v-for="(item,index) in expertList" :key="index">
                         <div class="left">
                             <div class="avatar">
-                                <img :src="item.img" alt="">
+                                <img :src="item.headImg" alt="">
                             </div>
                         </div>
                         <div class="right">
                             <div class="basic">
-                                <span>姓名:{{item.name}}</span>
+                                <span>姓名:{{item.personName}}</span>
                                 <span>邮件:{{item.email}}</span>
                             </div>
-                            <div class="info">   
+                            <div class="info">
                                 <span>单位:{{item.company}}</span>
-                                <span>技术特长:{{item.speciality}}</span>
-                                <span>职位:{{item.position}}</span>
+                                <span>技术特长:{{item.enterpriseName}}</span>
+                                <span>职位:{{item.professional}}</span>
                             </div>
                             <div class="introduc">
                                 <span>简介:</span>
-                                <p>{{overString(item.content)}}</p>
+                                <p class="nowrap">{{item.description}}</p>
                             </div>
                             <div class="btn_group">
                                 <a href="" class="video">&nbsp;</a>
@@ -45,33 +45,45 @@
             </div>
         </div>
         <div v-if="activeItem == 1" >
-            <div class="know_group" style="padding-top:50px;">
-                <el-row :gutter="20" class="group_body">
-                    <el-col :span="12" class="group_item" v-for="(item,index) in feedList" :key="index">
-                        <div class="left">
-                            <img :src="item.img" alt="">
-                        </div>
-                        <div class="right">
-                            <span class="item_label" v-html="item.label"></span>
-                            <span class="item_content">{{overString(item.content)}}</span>
-                        </div>
+            <div class="know_group" style="padding:50px;">
+                <el-row style="width: 48px;"><img src="../../../static/images/new.png" style="display: block; width: 100%;"/></el-row>
+                <el-row style="margin-left: 20px;">
+                    <el-col :span="20" class="group_item" v-for="(item,index) in newQuestions" :key="index">
+                      <div style="line-height: 40px;">{{ index +"."+ item.title }}</div>
+                    </el-col>
+                </el-row>
+            </div>
+            <div class="know_group" style="padding:0 50px 50px;">
+                <el-row style="width: 48px;"><img src="../../../static/images/hot.png" style="display: block; width: 100%;"/></el-row>
+                <el-row style="margin-left: 20px;">
+                    <el-col :span="20" class="group_item" v-for="(item,index) in hostQuestions" :key="index">
+                      <div style="line-height: 40px;">{{ index +"."+ item.title }}</div>
                     </el-col>
                 </el-row>
             </div>
         </div>
         <div v-if="activeItem == 2" >
-            <div class="know_group" style="padding-top:50px;">
-                <el-row :gutter="20" class="group_body">
-                    <el-col :span="8" class="group_item" v-for="(item,index) in drugList" :key="index">
-                        <div class="left">
-                            <img :src="item.img" alt="">
-                        </div>
-                        <div class="right">
-                            <span class="item_label" v-html="item.label"></span>
-                            <span class="item_content">{{overString(item.content)}}</span>
-                        </div>
-                    </el-col>
-                </el-row>
+            <div class="questionForm" >
+              <el-form ref="questionForm" :model="questionForm" label-width="80px">
+                <el-form-item label="活动名称">
+                  <el-input v-model="questionForm.questionTitle"></el-input>
+                </el-form-item>
+
+                <el-form-item label="活动性质">
+                  <el-checkbox-group v-model="questionForm.contentType">
+                    <el-checkbox label="饲料喂养"></el-checkbox>
+                    <el-checkbox label="水质环境"></el-checkbox>
+                    <el-checkbox label="病害防治"></el-checkbox>
+                  </el-checkbox-group>
+                </el-form-item>
+
+                <el-form-item label="活动形式">
+                  <el-input type="textarea" v-model="questionForm.content"></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" @click="questionSubmit">提交</el-button>
+                </el-form-item>
+                </el-form>
             </div>
         </div>
         <div>
@@ -92,63 +104,19 @@
                     {label:"专家列表",value:"",en:"Aquaculture Encyclopedia"},
                     {label:"问题集萃",value:"",en:"Feed storage"},
                     {label:"我要提问",value:"",en:"Fish pharmacy store"}
-                    
                 ],
-                aquaculture:[
-                    {
-                        label:"蟹类",
-                        children:[
-                            {label:"中华绒敖蟹",img:require("../../assets/knowledge/crab01.png"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏色彩缤纷，延续着春花之娇，色彩缤纷，延续着春花之娇，花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"螃蟹",img:require("../../assets/knowledge/crab02.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽色彩缤纷，延续着春花之娇，，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"大螃蟹",img:require("../../assets/knowledge/crab03.png"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽色彩缤纷，延续着春花之娇，，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"中华绒敖蟹",img:require("../../assets/knowledge/crab01.png"),content:"如期绽放，色彩缤纷，延续着春花之娇，色彩缤纷，延续着春花之娇，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"螃蟹",img:require("../../assets/knowledge/crab02.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花色彩缤纷，延续着春花之娇，之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"大螃蟹",img:require("../../assets/knowledge/crab03.png"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏色彩缤纷，延续着春花之娇，花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"中华绒敖蟹",img:require("../../assets/knowledge/crab01.png"),content:"如期绽放，色彩缤纷，延续着春花之色彩缤纷，延续着春花之娇，娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"螃蟹",img:require("../../assets/knowledge/crab02.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花色彩缤纷，延续着春花之娇，色彩缤纷，延续着春花之娇，之丽，一朵一色妖貌动容。那些沉甸甸的秋绽放，色彩缤纷，延续着春花之娇，夏花色彩缤纷，延续着春花之娇，色彩缤纷，延续着春花之娇，之丽，一朵一色妖貌动容。那些沉甸甸的秋绽放，色彩缤纷，延续着春花之娇，夏花色彩缤纷，延续着春花之娇，色彩缤纷，延续着春花之娇，之丽，一朵一色妖貌动容。那些沉甸甸的秋绽放，色彩缤纷，延续着春花之娇，夏花色彩缤纷，延续着春花之娇，色彩缤纷，延续着春花之娇，之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"}
-                        ]
-                    },{
-                        label:"虾类",
-                        children:[
-                            {label:"大虾",img:require("../../assets/knowledge/shrimp04.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"小虾",img:require("../../assets/knowledge/shrimp04.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"美人虾",img:require("../../assets/knowledge/shrimp08.png"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"对虾",img:require("../../assets/knowledge/shrimp07.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"虾",img:require("../../assets/knowledge/shrimp09.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"大虾",img:require("../../assets/knowledge/shrimp04.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"小虾",img:require("../../assets/knowledge/shrimp04.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"美人虾",img:require("../../assets/knowledge/shrimp08.png"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"对虾",img:require("../../assets/knowledge/shrimp07.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"虾",img:require("../../assets/knowledge/shrimp09.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"毛虾",img:require("../../assets/knowledge/shrimp11.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"}
-                        ]
-                    },{
-                        label:"鱼类",
-                        children:[
-                            {label:"大鱼",img:require("../../assets/knowledge/fish13.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"小鱼",img:require("../../assets/knowledge/fish14.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"美人鱼",img:require("../../assets/knowledge/fish13.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"金龙鱼",img:require("../../assets/knowledge/fish15.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"鱼鱼",img:require("../../assets/knowledge/fish14.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"大鱼",img:require("../../assets/knowledge/fish13.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"小鱼",img:require("../../assets/knowledge/fish14.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"美人鱼",img:require("../../assets/knowledge/fish13.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"金龙鱼",img:require("../../assets/knowledge/fish15.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"鱼鱼",img:require("../../assets/knowledge/fish14.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"},
-                            {label:"鱼大",img:require("../../assets/knowledge/fish13.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"}
-                        ]
-                    }
-                ],
-                feedList:this.utils.arrRepeat([
-                    {label:"玉米胚胎",img:require("../../assets/knowledge/crab01.png"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏色彩缤纷，延续着春花之娇，色彩缤纷，延续着春花之娇，花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"}
-                ],23),
-                drugList:this.utils.arrRepeat([
-                    {label:"药品",img:require("../../assets/knowledge/crab02.jpg"),content:"如期绽放，色彩缤纷，延续着春花之娇，夏色彩缤纷，延续着春花之娇，色彩缤纷，延续着春花之娇，花之丽，一朵一色妖貌动容。那些沉甸甸的秋黄果色，肤泽更添光滑流金"}
-                ],23),
-                expertList:this.utils.arrRepeat([
-                    {name:"王洪新",email:"whx@qq.com",company:"南京市水产中心",speciality:"产地环境安全质量及农业废弃资源",position:"水产技术员",content:"掌握扎实的数学、物理、化学等基本理论知识；掌握现代生物科学和环境科学的基本理论；掌握水产经济动植物的增养殖技术、营养与饲料和病害防治等方面的基本知识和基本技能；掌握主要养殖鱼类、甲壳类、藻类(可选择其中的2-3类)的人工育苗、育种和成体的集约化养殖等生产环节的技术关键；具备内陆水域、浅海、滩涂的渔业资源和环境调查与规划的基本方法，了解现代化养殖工程、海洋渔业和水产品加工利用的基本知识；具备农业可持续发展的意识和基本知识，了解水产增养殖学、生命科学的学科前沿和发展趋势。"}
-                ])
-
+                newQuestions:[],
+                hostQuestions:[],
+                questionForm:{
+                  userName:"",
+                  questionTitle: "",
+                  contentType: [],
+                  content: ""
+                },
+                expertList:[],
+                newQuestionPage: 1,
+                hostQuestionPage: 1,
+                expertPage: 1
             }
         },
         methods:{
@@ -158,26 +126,55 @@
             //获取专家列表
             getExpertList(){
                 const self = this;
-                self.$.get("/IntelligentAgriculture/expert/expertList",function(res){
-                    console.log(res)
+                self.$.get("/IntelligentAgriculture/expert/expertList",{page: self.expertPage},function(res){
+                  let result = JSON.parse(res);
+                  if(result.resCode == 1) {
+                    self.expertList = result.res;
+                  } else {
+                    self.$message.error(result.msg);
+                  }
                 })
             },
             //获取问题列表
             getQsList(){
                 const self = this;
-                self.$.get("/IntelligentAgriculture/expert/getAllNewQuestions",{page:1},function(res){
-                    console.log(JSON.parse(res))
+                self.$.post("/IntelligentAgriculture/expert/getNewQuestionsByPage",{page:self.newQuestionPage},function(res){
+                  let result = JSON.parse(res);
+                  if(result.resCode == 1) {
+                    self.newQuestions = result.res.newQuestionByPage;
+                    console.log(result.res);
+                  } else {
+                    self.$message.error(result.msg);
+                  }
                 })
             },
             //获取热门问题
+            questionSubmit(){
+              const self = this;
+              self.questionForm.userName = localStorage.getItem('msuserName');
+              self.$.post("/IntelligentAgriculture/expert/sharedQuestionSave",self.questionForm,function(res){
+                let result = JSON.parse(res);
+                if(result.resCode == 1) {
+                  self.$message.success("提交成功");
+                } else {
+                  self.$message.error(result.msg);
+                }
+              })
+            },
             getHotQsList(){
                 const self = this;
-                self.$.get("/IntelligentAgriculture/expert/getAllHostQuestions",{page:1},function(res){
-                    console.log(JSON.parse(res))
+                self.$.get("/IntelligentAgriculture/expert/getHostQuestionsByPage",{page:self.hostQuestionPage},function(res){
+                  let result = JSON.parse(res);
+                  if(result.resCode == 1) {
+                    self.hostQuestions = result.res.hotQuestionByPage;
+                    console.log(result.res);
+                  } else {
+                    self.$message.error(result.msg);
+                  }
                 })
             }
         },
-        mounted(){
+        created(){
             const self = this;
             self.getExpertList();
             self.getQsList();
@@ -223,7 +220,7 @@
         margin-top:50px;
         padding-bottom:30px;
         min-height:120px;
-        overflow:hidden; 
+        overflow:hidden;
         text-overflow:ellipsis;
     }
 
@@ -238,7 +235,7 @@
     .expert_group .group_body .group_item .left img{
         width:100%;
         height:100%;
-       
+
     }
     .expert_group .group_body .group_item .right{
         display:flex;
@@ -248,7 +245,7 @@
         font-size:16px;
     }
     .expert_group .group_body .group_item .right .item_content{
-        overflow:hidden; 
+        overflow:hidden;
         text-overflow:ellipsis;
         display:-webkit-box;
         -webkit-box-orient:vertical;
@@ -298,7 +295,15 @@
     .expert_group .group_body .group_item .right .btn_group .make{
         background-image:url('../../assets/expert/icon3.png');
     }
-
-
+    .nowrap {
+      overflow: hidden;
+      text-overflow:ellipsis;
+      height: 70px;
+      font-size: 12px;
+    }
+    .questionForm {
+      margin: 50px auto;
+      width: 70%;
+    }
 
 </style>
