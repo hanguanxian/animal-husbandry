@@ -75,10 +75,10 @@
             </div>
         </div>
         <div>
-        
+
         </div>
         <div>
-        
+
         </div>
     </div>
 </template>
@@ -250,9 +250,9 @@
     .expert_group .group_body .group_item .right .item_content{
         overflow:hidden; 
         text-overflow:ellipsis;
-        display:-webkit-box; 
+        display:-webkit-box;
         -webkit-box-orient:vertical;
-        -webkit-line-clamp:3; 
+        -webkit-line-clamp:3;
         font-size:12px;
     }
     .expert_group .group_body .group_item .right .basic{
@@ -298,6 +298,7 @@
     .expert_group .group_body .group_item .right .btn_group .make{
         background-image:url('../../assets/expert/icon3.png');
     }
+
 
 
 </style>
