@@ -166,9 +166,10 @@
                 <el-pagination
                     class="pagina"
                     :current-page.sync="daily.curPage"
-                    :page-size="100"
+                    :page-count="daily.totalPages"
                     layout="total, prev, pager, next"
-                    :total="1000">
+                    :total="daily.totalRecode"
+                    @current-change="curChange">
                 </el-pagination>
             </el-tab-pane>
             <el-tab-pane label="巡视检查" name="patrol" style="padding:20px">
@@ -206,9 +207,10 @@
                 <el-pagination
                     class="pagina"
                     :current-page.sync="polling.curPage"
-                    :page-size="100"
+                    :page-count="polling.totalPages"
                     layout="total, prev, pager, next"
-                    :total="1000">
+                    :total="polling.totalRecode"
+                    @current-change="curChange('polling')">
                 </el-pagination>
             </el-tab-pane>
         </el-tabs>
@@ -287,9 +289,9 @@
                     ]
                 },
                 form_export:{
-                    startTime:"",
-                    endTime:"",
-                    exportType:"",
+                    startTime:"2017/7/1",
+                    endTime:new Date(),
+                    exportType:"全部",
                 },
                 formData:{
                     pondList:[],
@@ -441,23 +443,25 @@
                         }
                     ],
                     dataType:[],
-                    tb_daily:this.utils.arrRepeat([{
-                        id:"0",
-                        name:"测试五",
-                        type:"螺蛳",
-                        pond:"固城湖",
-                        money:"100元",
-                        pic:["asdasd"],
-                        date:"2018-08-19 08:00"
-                    }]),
-                    tb_polling:this.utils.arrRepeat([{
-                        id:"0",
-                        pond:"固城湖",
-                        content:"水质水肥度: 偏低",
-                        inputData:"含氧量2.3ml/L",
-                        pic:["asdasd"],
-                        date:"2018-08-19 08:00"
-                    }]),
+                    tb_daily:[],
+                    // tb_daily:this.utils.arrRepeat([{
+                    //     id:"0",
+                    //     name:"测试五",
+                    //     type:"螺蛳",
+                    //     pond:"固城湖",
+                    //     money:"100元",
+                    //     pic:["asdasd"],
+                    //     date:"2018-08-19 08:00"
+                    // }]),
+                    tb_polling:[],
+                    // tb_polling:this.utils.arrRepeat([{
+                    //     id:"0",
+                    //     pond:"固城湖",
+                    //     content:"水质水肥度: 偏低",
+                    //     inputData:"含氧量2.3ml/L",
+                    //     pic:["asdasd"],
+                    //     date:"2018-08-19 08:00"
+                    // }]),
                     exportType:[
                         {label:"全部",value:"全部"},
                         {label:"日常投放",value:"日常投放"},
@@ -468,9 +472,13 @@
                 myTheme:"0",
                 daily:{
                     curPage:1,
+                    totalRecode:0,
+                    totalPages:1
                 },
                 polling:{
                     curPage:1,
+                    totalRecode:0,
+                    totalPages:1
                 },
                 kind:"throw",
                 exportDialogShow:false,
@@ -523,46 +531,57 @@
             //获取输入标签
             getDailyInputType(){
                 const self = this;
-                self.$.get("/IntelligentAgriculture/breedingLog/dailyInputType",function(res){
-                    res = JSON.parse(res);
-                    console.log(res)
-                    self.formData.putCateList = [];
-                    for(const item of res.dailyInputType){
-                        self.formData.putCateList.push({
-                            label:item.inputtypename,
-                            value:item.inputtype
-                        })
+                self.$.get("/IntelligentAgriculture/breedingLog/dailyInputType",function(data){
+                    data = JSON.parse(data);
+                    if(data.resCode == 1){
+                        self.formData.putCateList = [];
+                        for(const item of data.res){
+                            self.formData.putCateList.push({
+                                label:item.inputtypename,
+                                value:item.inputtype
+                            })
+                        }
+                    }else if(data.resCode == 0){
+                        self.$message.error("获取类别信息失败")
                     }
+                    
                 })
             },
             //获取巡检类别
             getPollingType(){
                 const self = this;
-                self.$.get("/IntelligentAgriculture/breedingLog/showPatrolType",function(res){
-                    res = JSON.parse(res);
-                    console.log(res)
-                    self.formData.polling_content = [];
-                    for(const item of res.patrolContentType){
-                        self.formData.polling_content.push({
-                            label:item.name,
-                            value:item.patroltype
-                        })
+                self.$.get("/IntelligentAgriculture/breedingLog/showPatrolType",function(data){
+                    data = JSON.parse(data);
+                    if(data.resCode == 1){
+                        self.formData.polling_content = [];
+                        for(const item of data.res){
+                            self.formData.polling_content.push({
+                                label:item.name,
+                                value:item.patroltype
+                            })
+                        }
+                    }else if(data.resCode == 0){
+                        self.$message.error("获取巡检类别失败")
                     }
+                    
                 })
             },
             //获取录入数据的类型
             getInputDataType(){
                 const self = this;
-                self.$.get("/IntelligentAgriculture/breedingLog/showManualData",function(res){
-                    res = JSON.parse(res);
-                    console.log(res)
-                    self.formData.dataType = [];
-                    for(const item of res.manualData){
-                        self.formData.dataType.push({
-                            label:item.name,
-                            value:item.datatype,
-                            range:item.range
-                        })
+                self.$.get("/IntelligentAgriculture/breedingLog/showManualData",function(data){
+                    data = JSON.parse(data);
+                    if(data.resCode == 1){
+                        self.formData.dataType = [];
+                        for(const item of data.res){
+                            self.formData.dataType.push({
+                                label:item.name,
+                                value:item.datatype,
+                                range:item.range
+                            })
+                        }
+                    }else if(data.resCode == 0){
+                        self.$message.error("获取数据类型失败")
                     }
                 })
             },
@@ -583,12 +602,14 @@
                             //投放物子类别
                             throw_name_edit:throw_name,
                             // //投放物名称
+                            throw_price_all:self.form_daily.money,
+                            //价格
                             throw_image:self.form_daily.picList,
                             // //图片对象集合
                             throw_activetime:self.form_daily.date.toLocaleDateString()
                             // //活动时间
                         };
-                        self.$.post("/breedingLog/throw",data,function(res){
+                        self.$.post("/IntelligentAgriculture/breedingLog/throw",data,function(res){
                             console.log(res)
                         })
                     } else {
@@ -625,7 +646,7 @@
                            activeTime:self.form_polling.date.toLocaleDateString(),
                            //活动时间
                        };
-                       self.$.post("/breedingLog/patrol",data,function(res){
+                       self.$.post("/IntelligentAgriculture/breedingLog/patrol",data,function(res){
                            console.log(res)
                        })
                    }else{
@@ -642,7 +663,7 @@
             swithKind(tab){
                 const self = this;
                 self.kind = tab.name ;
-                // self.getTableDate();
+                self.getTableDate();
             },
             getTableDate(){
                 const self = this;
@@ -650,49 +671,103 @@
                     page: self.kind == 'throw' ? self.daily.curPage : self.polling.curPage,
                     kind: self.kind
                 }
-                console.log(data)
-                self.$.get("/IntelligentAgriculture/system/showMyLog",data,function(res){
-                    console.log(res)
+                
+                self.$.get("/IntelligentAgriculture/breedingLog/showMyLog",data,function(data){
+                    data = JSON.parse(data);
+                    console.log(data)
+                    if(data.resCode == 1){
+                        if(self.kind == "throw"){
+                            self.daily.totalRecode = data.res.totalSizeRecord;
+                            self.daily.totalPages = data.res.totalPages;
+                            self.daily.curPage = data.res.currentPage*1;
+                            self.formData.tb_daily = [];
+                            var i = 1
+                            for(const item of data.res.recordsByPage){
+                                self.formData.tb_daily.push({
+                                    id:i++,
+                                    name:item.Name,
+                                    type:item.InputTypeName,
+                                    pond:item.Pond_Name,
+                                    money:item.Value,
+                                    pic:item.ImageUrl,
+                                    date:item.ActiveTime
+                                })
+                            }
+                        }else{
+                            self.polling.totalRecode = data.res.totalSizeRecord;
+                            self.polling.totalPages = data.res.totalPages;
+                            self.polling.curPage = data.res.currentPage*1;
+                            self.formData.tb_polling = [];
+                            var i = 1
+                            for(const item of data.res.recordsByPage){
+                                self.formData.tb_polling.push({
+                                    id:i++,
+                                    pond:item.Pond_Name,
+                                    content:item.ContentType,
+                                    inputData:item.Name+item.Value || "",
+                                    pic:item.ImageUrl,
+                                    date:item.ActiveTime
+                                })
+                            }
+                        }
+                    }else if(data.resCode == 0){
+                        self.$message.error("获取日志失败")
+                    }
                 })
+            },
+            curChange(val){
+                const self = this;
+                self.getTableDate()
             },
             //表格中查看图片
             checkImg(index,row){
                 const self = this;
+                // let pic = row.pic.replace(/\[|\]/g,""); 
                 let data = {
-                    names : row.pic.join('')
+                    names : row.pic
                 }
-                self.$.post("IntelligentAgriculture/breedingLog/loadImages",data,function(res){
-                    console.log(res)
+                self.$.post("/IntelligentAgriculture/breedingLog/loadImages",data,function(data){
+                    data = JSON.parse(data);
+                    if(data.resCode == 1){
+                        if(data.res.length == 0){
+                            self.$message.info("暂无图片")
+                        }else{
+                            window.location = data.res[0]
+                        }
+                    }else if(data.resCode == 0){
+                        self.$message.error("获取图片失败")
+                    }
                 })
             },
          
             //导出表格内容
             exportTable(formName){
                 const self = this;
-                let data = {
-                    startTime:self.form_export.startTime.toLocaleDateString(),
-                    endTime:self.form_export.endTime.toLocaleDateString(),
-                    content_select:self.form_export.exportType
+                var start = new Date(self.form_export.startTime);
+                var end = new Date(self.form_export.endTime);
+                if(start.getTime()>end.getTime()){
+                    self.$message.error("结束时间不能早于开始时间")
+                }else{
+                    var form = self.$('<form id="excel"></form>');
+                    self.$('body').append(form);
+                    var input1 = self.$("<input type='text' name='startTime'></input>");
+                    var input2 = self.$("<input type='text' name='endTime'></input>");
+                    var input3 = self.$("<input type='text' name='content_select'></input>");
+                    input1.attr('value',start.toLocaleDateString())
+                    input2.attr('value',end.toLocaleDateString())
+                    input3.attr('value',self.form_export.exportType)
+                    form.append(input1,input2,input3)
+                    form.attr('action',"IntelligentAgriculture/breedingLog/export");
+                    form.attr("method","POST");
+                    form.attr('enctype',"multipart/form-data")
+                    form.submit(); 
+                    self.$("#excel").remove()
+                    self.resetForm(formName);
+                    self.exportDialogShow = false;
                 }
-                self.$.get("/IntelligentAgriculture/breedingLog/export",data,function(res,textStatus,xhr){
- 
-                    var blob = new Blob([res], {type: "application/vnd.ms-excel;charset=utf-8"});
-                    FileSaver.saveAs(blob, "日志.xls")
-                    // Temp = document.createElement("a");
-                    //  console.log(blob)
-                    // Temp.href = window.URL.createObjectURL(blob);
-                    // Temp.download = "日志.xls";
-                    // self.$('body').append(Temp);
-                    // Temp.click();
-                    // self.resetForm(formName);
-                    self.exportDialogShow = false
-                })
-                
             }
-            
-
         },
-        created(){
+        mounted(){
             var self = this;
             self.getPonds();
             self.getDailyInputType();
