@@ -7,11 +7,11 @@
           @change="areaChange">
         </el-cascader>
       </div>
-      <el-tabs v-model="tabName" type="card">
+      <el-tabs v-model="tabName" type="card" @tab-click="tangKouSelect">
         <el-tab-pane
           v-for="(tangKou, index) in tangKous"
           :key="index" :label="tangKou.name"
-          :name="tangKou.name" @tab-click="tangKouSelect(index)">
+          :name="tangKou.name">
         </el-tab-pane>
       </el-tabs>
       <div id="monitor-info">
@@ -80,7 +80,6 @@
         </el-form>
       </el-row>
       <IEcharts class="echarts" :option="option"></IEcharts>
-      <button @click="doRandom">Random</button>
   </el-row >
 </template>
 
@@ -190,14 +189,6 @@
       this.showTangKou();
     },
     methods: {
-      doRandom() {
-        const that = this;
-        let data = [];
-        for (let i = 0, min = 5, max = 99; i < 6; i++) {
-          data.push(Math.floor(Math.random() * (max + 1 - min) + min));
-        }
-        that.bar.series[0].data = data;
-      },
       showTangKou(){
         const self = this;
         let data = {areacode: self.tangKousForm.areacode}
@@ -212,13 +203,18 @@
             {fid:5,cid:2,sid:'0910',order: '',name: '固城湖威森'},
             {fid:6,cid:2,sid:'0409',order: '',name: '实验室'},
             {fid:7,cid:2,sid:'0',order: '43',name: '江宁基地'}];
-            self.tangKouSelect(0);
             self.tabName = self.tangKous[0].name;
+            self.tangKou = self.tangKous[0];
             self.dateTimeRange(60 * 60 * 24);
         })
       },
-      tangKouSelect(index){//塘口选择
-        this.tangKou = this.tangKous[index];
+      tangKouSelect(tab, event){//塘口选择
+        console.log(tab);
+        const self = this;
+        let index = parseInt(tab.index);
+        self.tangKou = self.tangKous[index];
+        this.option.series = [];
+        self.dateTimeRange(60 * 60 * 24);
       },
       queryCurrentData(){
         const self = this;
@@ -241,7 +237,6 @@
                 self.currentData.oxygen = result.res[i].value || '';
                 break;
               default:
-
             }
           }
         })
@@ -322,10 +317,13 @@
 <style>
   .echarts {
     width: 100%;
-    height: 400px;
+    min-height: 400px;
   }
   .el-tabs--card>.el-tabs__header .el-tabs__item.is-active, .el-tabs__header {
     border: none !important;
+  }
+  .el-tabs--card>.el-tabs__header .el-tabs__item {
+    transition: none;
   }
   .areaSelect {
     margin: 20px;
