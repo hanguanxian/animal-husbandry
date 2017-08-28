@@ -32,7 +32,7 @@
                     <el-form-item prop="picList" label="上传图片">
                         <el-upload
                             class="upload-demo"
-                            action="https://jsonplaceholder.typicode.com/posts/"
+                            action=""
                             :file-list="form_daily.picList">
                             <el-button size="small" type="primary">点击上传</el-button>
                             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -93,7 +93,7 @@
                     <el-form-item prop="picList" label="上传图片">
                         <el-upload
                             class="upload-demo"
-                            action="https://jsonplaceholder.typicode.com/posts/"
+                            action=""
                             :file-list="form_polling.picList">
                             <el-button size="small" type="primary">点击上传</el-button>
                             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -166,9 +166,10 @@
                 <el-pagination
                     class="pagina"
                     :current-page.sync="daily.curPage"
-                    :page-size="100"
+                    :page-count="daily.totalPages"
                     layout="total, prev, pager, next"
-                    :total="1000">
+                    :total="daily.totalRecode"
+                    @current-change="curChange">
                 </el-pagination>
             </el-tab-pane>
             <el-tab-pane label="巡视检查" name="patrol" style="padding:20px">
@@ -206,9 +207,10 @@
                 <el-pagination
                     class="pagina"
                     :current-page.sync="polling.curPage"
-                    :page-size="100"
+                    :page-count="polling.totalPages"
                     layout="total, prev, pager, next"
-                    :total="1000">
+                    :total="polling.totalRecode"
+                    @current-change="curChange('polling')">
                 </el-pagination>
             </el-tab-pane>
         </el-tabs>
@@ -244,6 +246,7 @@
 </template>
 
 <script>
+    import FileSaver from "file-saver"
     export default {
         data() {
             return {
@@ -286,177 +289,55 @@
                     ]
                 },
                 form_export:{
-                    startTime:"",
-                    endTime:"",
-                    exportType:"",
+                    startTime:"2017/7/1",
+                    endTime:new Date(),
+                    exportType:"全部",
                 },
                 formData:{
                     pondList:[],
                     putCateList:[],
-                    polling_content:[{
-                        label:"水质",
-                        value:"shuizhi",
-                        children:[{
-                            label:"水色",
-                            value:"shuise",
-                            children:[{
-                                label:"正常",
-                                value:"zhengchang"
-                            },{
-                                label:"发黑",
-                                value:"fahei"
-                            },{
-                                label:"发绿",
-                                value:"falv"
-                            }]
-                        },{
-                            label:"水肥度",
-                            value:"shuifeidu",
-                            children:[{
-                                label:"过高",
-                                value:"guogao"
-                            },{
-                                label:"偏高",
-                                value:"piangao"
-                            },{
-                                label:"正常",
-                                value:"zhengchan"
-                            },{
-                                label:"偏低",
-                                value:"piandi"
-                            },{
-                                label:"过低",
-                                value:"guodi"
-                            }]
-                        },{
-                            label:"水透明度",
-                            value:"shuitoumingdu",
-                            children:[{
-                                label:"过高",
-                                value:"guogao"
-                            },{
-                                label:"偏高",
-                                value:"piangao"
-                            },{
-                                label:"正常",
-                                value:"zhengchan"
-                            },{
-                                label:"偏低",
-                                value:"piandi"
-                            },{
-                                label:"过低",
-                                value:"guodi"
-                            }]
-                        },{
-                            label:"水温",
-                            value:"shuiwen",
-                            children:[{
-                                label:"过高",
-                                value:"guogao"
-                            },{
-                                label:"偏高",
-                                value:"piangao"
-                            },{
-                                label:"正常",
-                                value:"zhengchan"
-                            },{
-                                label:"偏低",
-                                value:"piandi"
-                            },{
-                                label:"过低",
-                                value:"guodi"
-                            }]
-                        },{
-                            label:"溶解氧",
-                            value:"rongjieyang",
-                            children:[{
-                                label:"过高",
-                                value:"guogao"
-                            },{
-                                label:"偏高",
-                                value:"piangao"
-                            },{
-                                label:"正常",
-                                value:"zhengchan"
-                            },{
-                                label:"偏低",
-                                value:"piandi"
-                            },{
-                                label:"过低",
-                                value:"guodi"
-                            }]
-                        }
-                        ]},{
+                    polling_content:[
+                        {
+                            label:"水质",
+                            value:"水质",
+                            children:[]
+                        },
+                        {
                             label:"螃蟹",
-                            value:"pangxie",
-                            children:[{
-                                label:"吃料",
-                                value:"chiliao",
-                                children:[{
-                                    label:"太少",
-                                    value:"taishao"
-                                },{
-                                    label:"偏少",
-                                    value:"pianshao"
-                                },{
-                                    label:"正常",
-                                    value:"zhengchan"
-                                },{
-                                    label:"偏多",
-                                    value:"pianduo"
-                                },{
-                                    label:"太多",
-                                    value:"taiduo"
-                                }]
-                            },{
-                                label:"活动力",
-                                value:"huodongli",
-                                children:[{
-                                    label:"很弱",
-                                    value:"henruo"
-                                },{
-                                    label:"偏弱",
-                                    value:"pianruo"
-                                },{
-                                    label:"正常",
-                                    value:"zhengchan"
-                                },{
-                                    label:"偏强",
-                                    value:"pianqiang"
-                                },{
-                                    label:"很强",
-                                    value:"henqiang"
-                                }]
-                            },{
-                                label:"行为",
-                                value:"xingwei"
-                            },{
-                                label:"体征",
-                                value:"tizheng"
-                            },{
-                                label:"脱壳",
-                                value:"tuoqiao"
-                            }]
-                        }
+                            value:"螃蟹",
+                            children:[]
+                        },
+                        {
+                            label:"虾",
+                            value:"虾",
+                            children:[]
+                        },
+                        {
+                            label:"鱼",
+                            value:"鱼",
+                            children:[]
+                        },
                     ],
                     dataType:[],
-                    tb_daily:this.utils.arrRepeat([{
-                        id:"0",
-                        name:"测试五",
-                        type:"螺蛳",
-                        pond:"固城湖",
-                        money:"100元",
-                        pic:["asdasd"],
-                        date:"2018-08-19 08:00"
-                    }]),
-                    tb_polling:this.utils.arrRepeat([{
-                        id:"0",
-                        pond:"固城湖",
-                        content:"水质水肥度: 偏低",
-                        inputData:"含氧量2.3ml/L",
-                        pic:["asdasd"],
-                        date:"2018-08-19 08:00"
-                    }]),
+                    tb_daily:[],
+                    // tb_daily:this.utils.arrRepeat([{
+                    //     id:"0",
+                    //     name:"测试五",
+                    //     type:"螺蛳",
+                    //     pond:"固城湖",
+                    //     money:"100元",
+                    //     pic:["asdasd"],
+                    //     date:"2018-08-19 08:00"
+                    // }]),
+                    tb_polling:[],
+                    // tb_polling:this.utils.arrRepeat([{
+                    //     id:"0",
+                    //     pond:"固城湖",
+                    //     content:"水质水肥度: 偏低",
+                    //     inputData:"含氧量2.3ml/L",
+                    //     pic:["asdasd"],
+                    //     date:"2018-08-19 08:00"
+                    // }]),
                     exportType:[
                         {label:"全部",value:"全部"},
                         {label:"日常投放",value:"日常投放"},
@@ -467,9 +348,13 @@
                 myTheme:"0",
                 daily:{
                     curPage:1,
+                    totalRecode:0,
+                    totalPages:1
                 },
                 polling:{
                     curPage:1,
+                    totalRecode:0,
+                    totalPages:1
                 },
                 kind:"throw",
                 exportDialogShow:false,
@@ -505,7 +390,6 @@
                 const self = this;
                 self.$.get("/IntelligentAgriculture/PondInfo/showPondinfos",function(data){
                     data = JSON.parse(data);
-                    console.log(data)
                     if(data.resCode == 1){
                         self.formData.pondList = [];
                         for(const item of data.res){
@@ -522,46 +406,185 @@
             //获取输入标签
             getDailyInputType(){
                 const self = this;
-                self.$.get("/IntelligentAgriculture/breedingLog/dailyInputType",function(res){
-                    res = JSON.parse(res);
-                    console.log(res)
-                    self.formData.putCateList = [];
-                    for(const item of res.dailyInputType){
-                        self.formData.putCateList.push({
-                            label:item.inputtypename,
-                            value:item.inputtype
-                        })
+                self.$.get("/IntelligentAgriculture/breedingLog/dailyInputType",function(data){
+                    data = JSON.parse(data);
+                    console.log(data)
+                    if(data.resCode == 1){
+                        self.formData.putCateList = [];
+                        for(const item of data.res){
+                            self.formData.putCateList.push({
+                                label:item.inputtypename,
+                                value:item.inputtype
+                            })
+                        }
+                    }else if(data.resCode == 0){
+                        self.$message.error("获取类别信息失败")
                     }
+                    
                 })
             },
             //获取巡检类别
             getPollingType(){
                 const self = this;
-                self.$.get("/IntelligentAgriculture/breedingLog/showPatrolType",function(res){
-                    res = JSON.parse(res);
-                    console.log(res)
-                    self.formData.polling_content = [];
-                    for(const item of res.patrolContentType){
-                        self.formData.polling_content.push({
-                            label:item.name,
-                            value:item.patroltype
-                        })
+                let ssState = [    //水质三级选项
+                    {
+                        label:"发绿",
+                        value:"发绿"
+                    },{
+                        label:"发黑",
+                        value:"发黑"  
+                    },{
+                        label:"正常",
+                        value:"正常"  
                     }
+                ]
+                let common = [   //通用选项  //过低 过高
+                    {label:"过低",value:"过低"},
+                    {label:"偏低",value:"偏低"},
+                    {label:"正常",value:"正常"},
+                    {label:"偏高",value:"偏高"},
+                    {label:"过高",value:"过高"}
+                ]
+                let chiliao = [
+                    {label:"太少",value:"太少"},
+                    {label:"偏少",value:"偏少"},
+                    {label:"正常",value:"正常"},
+                    {label:"偏多",value:"偏多"},
+                    {label:"太多",value:"太多"}
+                ]
+                let huodongli = [
+                    {label:"很弱",value:"很弱"},
+                    {label:"偏弱",value:"偏弱"},
+                    {label:"正常",value:"正常"},
+                    {label:"偏强",value:"偏强"},
+                    {label:"过强",value:"过强"}
+                ]
+                let xingwei = [
+                    {label:"常浮上水面",value:"常浮上水面"},
+                    {label:"常浮到池边",value:"常浮到池边"},
+                    {label:"正常",value:"正常"},
+                    {label:"常在深水区",value:"常在深水区"},
+                    {label:"常吐泡沫",value:"常吐泡沫"},
+                    {label:"持续颤抖",value:"持续颤抖"},
+                    {label:"极少死亡",value:"极少死亡"},
+                    {label:"少量死亡",value:"少量死亡"},
+                    {label:"大量死亡",value:"大量死亡"},
+                ]
+                function buweiState(){
+                    return [
+                        {label:"腐烂",value:"腐烂"},
+                        {label:"斑点",value:"斑点"},
+                        {label:"正常",value:"正常"},
+                        {label:"发黑",value:"发黑"},
+                        {label:"发白",value:"发白"},
+                        {label:"发绿",value:"发绿"},
+                        {label:"发红",value:"发红"},
+                        {label:"水肿",value:"水肿"},
+                        {label:"发红",value:"发红"},
+                        {label:"少量脱落",value:"少量脱落"},
+                        {label:"大量脱落",value:"大量脱落"},
+                    ]
+                }
+                let buwei = [
+                    {label:"蟹钳",value:"蟹钳",children:buweiState()},
+                    {label:"附肢",value:"附肢",children:buweiState()},
+                    {label:"头壳",value:"头壳",children:buweiState()},
+                    {label:"腮",value:"腮",children:buweiState()},
+                    {label:"腹部",value:"腹部",children:buweiState()},
+                    {label:"触须",value:"触须",children:buweiState()},
+                ]
+                let yu_buwei=[
+                    {label:"鳞",value:"鳞",children:buweiState()},
+                    {label:"嘴",value:"嘴",children:buweiState()},
+                    {label:"腮",value:"腮",children:buweiState()},
+                    {label:"腹部",value:"腹部",children:buweiState()},
+                    {label:"尾部",value:"尾部",children:buweiState()},
+                ]
+                let tuoke = [
+                    {label:"提前",value:"提前"},
+                    {label:"正常",value:"正常"},
+                    {label:"推迟",value:"推迟"},
+                ]
+                self.$.get("/IntelligentAgriculture/breedingLog/showPatrolType",function(data){
+                    data = JSON.parse(data);
+                     console.log(data)
+                    if(data.resCode == 1){
+                        for(const item of data.res){
+                            if(item.name=="水色"){
+                                self.formData.polling_content[0].children.push({
+                                    label:item.name,
+                                    value:item.patroltype,
+                                    children:ssState
+                                })
+                            }else if(item.name=="水肥度" || item.name=="水透明度" || item.name=="水温" || item.name=="溶解氧"){
+                                self.formData.polling_content[0].children.push({
+                                    label:item.name,
+                                    value:item.patroltype,
+                                    children:common
+                                })
+                            }else if(item.name == "体征"){
+                                self.formData.polling_content[1].children.push({
+                                    label:item.name,
+                                    value:item.patroltype,
+                                    children:buwei
+                                })
+                                self.formData.polling_content[2].children.push({
+                                    label:item.name,
+                                    value:item.patroltype,
+                                    children:buwei
+                                })
+                                self.formData.polling_content[3].children.push({
+                                    label:item.name,
+                                    value:item.patroltype,
+                                    children:yu_buwei
+                                })
+                            }else{
+                                let threeMenu;
+                                switch (item.name){
+                                    case "吃料":
+                                        threeMenu = chiliao;
+                                        break;
+                                    case "活动力":
+                                        threeMenu = huodongli;
+                                        break;
+                                    case "行为":
+                                        threeMenu = xingwei;
+                                        break;
+                                    case "脱壳":
+                                        threeMenu = tuoke;
+                                        break
+                                }
+                                for(let i=1;i<self.formData.polling_content.length;i++){
+                                    self.formData.polling_content[i].children.push({
+                                        label:item.name,
+                                        value:item.patroltype,
+                                        children:threeMenu
+                                    })
+                                }
+                            }
+                        }
+                    }else if(data.resCode == 0){
+                        self.$message.error("获取巡检类别失败")
+                    }
+                    
                 })
             },
             //获取录入数据的类型
             getInputDataType(){
                 const self = this;
-                self.$.get("/IntelligentAgriculture/breedingLog/showManualData",function(res){
-                    res = JSON.parse(res);
-                    console.log(res)
-                    self.formData.dataType = [];
-                    for(const item of res.manualData){
-                        self.formData.dataType.push({
-                            label:item.name,
-                            value:item.datatype,
-                            range:item.range
-                        })
+                self.$.get("/IntelligentAgriculture/breedingLog/showManualData",function(data){
+                    data = JSON.parse(data);
+                    if(data.resCode == 1){
+                        self.formData.dataType = [];
+                        for(const item of data.res){
+                            self.formData.dataType.push({
+                                label:item.name,
+                                value:item.datatype,
+                                range:item.range
+                            })
+                        }
+                    }else if(data.resCode == 0){
+                        self.$message.error("获取数据类型失败")
                     }
                 })
             },
@@ -582,12 +605,14 @@
                             //投放物子类别
                             throw_name_edit:throw_name,
                             // //投放物名称
+                            throw_price_all:self.form_daily.money,
+                            //价格
                             throw_image:self.form_daily.picList,
                             // //图片对象集合
-                            throw_activetime:self.form_daily.date
+                            throw_activetime:self.form_daily.date.toLocaleDateString()
                             // //活动时间
                         };
-                        self.$.post("/IntelligentAgriculture/throwManage/throw?page=1&kind=throw",data,function(res){
+                        self.$.post("/IntelligentAgriculture/breedingLog/throw",data,function(res){
                             console.log(res)
                         })
                     } else {
@@ -600,18 +625,19 @@
                 const self = this;
                 self.$refs[formName].validate((valid) => {
                    if(valid){
+                       var content = self.form_polling.content;
                        let data = {
                            pondId:self.form_polling.pond,
                            //水域唯一标识
-                           patrolTarget:self.form_polling.content[0],
+                           patrolTarget:content[0],
                            //巡视检查对象
-                           patrolContentType1:self.form_polling.content[1] || "",
+                           patrolContentType1:content[1] || "",
                            //当对象是水质时，对应的类别;
-                           patrolContentType2: self.form_polling.content[2] || "",
+                           patrolContentType2: content[1] || "",
                            //当对象是螃蟹/虾/鱼时，对应的类别
-                           patrolContentStatus: self.form_polling.content[3] || "",
+                           patrolContentStatus: content.length > 3 ? content[3] : content[2],
                            //状态内容，例如偏低、正常、偏高
-                           patrolTargetPart:self.form_polling.content[4] || "",
+                           patrolTargetPart:content.length > 3 ? content[2] : "",
                            //当选择“体征”时，弹出的部位选择框，因此对应的是螃蟹/虾/鱼的部位
                            //录入数据：
                            islog: self.form_polling.inputData == 'yes' ? 'yes':'no', //对应是否录入数据的元素标签值，取值为yes或no
@@ -621,10 +647,10 @@
                            //录入的数据范围
                            files:self.form_polling.picList,
                            //图片对象集合
-                           activeTime:self.form_polling.date,
+                           activeTime:self.form_polling.date.toLocaleDateString(),
                            //活动时间
                        };
-                       self.$.post("/breedingLog/patrol",data,function(res){
+                       self.$.post("/IntelligentAgriculture/breedingLog/patrol",data,function(res){
                            console.log(res)
                        })
                    }else{
@@ -641,7 +667,7 @@
             swithKind(tab){
                 const self = this;
                 self.kind = tab.name ;
-                // self.getTableDate();
+                self.getTableDate();
             },
             getTableDate(){
                 const self = this;
@@ -649,41 +675,103 @@
                     page: self.kind == 'throw' ? self.daily.curPage : self.polling.curPage,
                     kind: self.kind
                 }
-                console.log(data)
-                self.$.get("/IntelligentAgriculture/system/showMyLog",data,function(res){
-                    console.log(res)
+                
+                self.$.get("/IntelligentAgriculture/breedingLog/showMyLog",data,function(data){
+                    data = JSON.parse(data);
+                    if(data.resCode == 1){
+                        if(self.kind == "throw"){
+                            self.daily.totalRecode = data.res.totalSizeRecord;
+                            self.daily.totalPages = data.res.totalPages;
+                            self.daily.curPage = data.res.currentPage*1;
+                            self.formData.tb_daily = [];
+                            var i = 1
+                            for(const item of data.res.recordsByPage){
+                                self.formData.tb_daily.push({
+                                    id:i++,
+                                    name:item.Name,
+                                    type:item.InputTypeName,
+                                    pond:item.Pond_Name,
+                                    money:item.Value,
+                                    pic:item.ImageUrl,
+                                    date:item.ActiveTime
+                                })
+                            }
+                        }else{
+                            self.polling.totalRecode = data.res.totalSizeRecord;
+                            self.polling.totalPages = data.res.totalPages;
+                            self.polling.curPage = data.res.currentPage*1;
+                            self.formData.tb_polling = [];
+                            var i = 1
+                            for(const item of data.res.recordsByPage){
+                                self.formData.tb_polling.push({
+                                    id:i++,
+                                    pond:item.Pond_Name,
+                                    content:item.ContentType,
+                                    inputData:item.Name+item.Value || "",
+                                    pic:item.ImageUrl,
+                                    date:item.ActiveTime
+                                })
+                            }
+                        }
+                    }else if(data.resCode == 0){
+                        self.$message.error("获取日志失败")
+                    }
                 })
+            },
+            curChange(val){
+                const self = this;
+                self.getTableDate()
             },
             //表格中查看图片
             checkImg(index,row){
                 const self = this;
-                let data = {
-                    names : row.pic.join('')
+                // let pic = row.pic.replace(/\[|\]/g,""); 
+                let data1 = {
+                    names : row.pic
                 }
-                self.$.post("IntelligentAgriculture/breedingLog/loadImages",data,function(res){
-                    console.log(res)
+                self.$.post("/IntelligentAgriculture/breedingLog/loadImages",data1,function(data){
+                    data = JSON.parse(data);
+                    console.log(data.res[0])
+                    if(data.resCode == 1){
+                        if(data.res.length == 0){
+                            self.$message.info("暂无图片")
+                        }else{
+                            // window.location = data.res[0]
+                        }
+                    }else if(data.resCode == 0){
+                        self.$message.error("获取图片失败")
+                    }
                 })
             },
          
             //导出表格内容
             exportTable(formName){
                 const self = this;
-                let data = {
-                    startTime:self.form_export.startTime.toLocaleDateString(),
-                    endTime:self.form_export.endTime.toLocaleDateString(),
-                    content_select:self.form_export.exportType
-                }
-                self.$.post("IntelligentAgriculture/breedingLog/export",data,function(res){
-                    console.log(res)
+                var start = new Date(self.form_export.startTime);
+                var end = new Date(self.form_export.endTime);
+                if(start.getTime()>end.getTime()){
+                    self.$message.error("结束时间不能早于开始时间")
+                }else{
+                    var form = self.$('<form id="excel"></form>');
+                    self.$('body').append(form);
+                    var input1 = self.$("<input type='text' name='startTime'></input>");
+                    var input2 = self.$("<input type='text' name='endTime'></input>");
+                    var input3 = self.$("<input type='text' name='content_select'></input>");
+                    input1.attr('value',start.toLocaleDateString())
+                    input2.attr('value',end.toLocaleDateString())
+                    input3.attr('value',self.form_export.exportType)
+                    form.append(input1,input2,input3)
+                    form.attr('action',"IntelligentAgriculture/breedingLog/export");
+                    form.attr("method","POST");
+                    form.attr('enctype',"multipart/form-data")
+                    form.submit(); 
+                    self.$("#excel").remove()
                     self.resetForm(formName);
-                    self.exportDialogShow = false
-                })
-                
+                    self.exportDialogShow = false;
+                }
             }
-            
-
         },
-        created(){
+        mounted(){
             var self = this;
             self.getPonds();
             self.getDailyInputType();

@@ -41,6 +41,13 @@ module.exports = {
          pathRewrite: {
            '^/IntelligentAgriculture': '/IntelligentAgriculture'
          }
+      },
+      '/breedingLog': {
+         target: 'http://210.28.188.103:8080',
+         changeOrigin: true,
+         pathRewrite: {
+           '^/breedingLog': '/breedingLog'
+         }
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
