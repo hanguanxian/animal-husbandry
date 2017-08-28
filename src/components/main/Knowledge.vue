@@ -12,7 +12,7 @@
             </div>
         </div>
         <div v-if="activeItem == 0">
-            <div class="know_group" v-for="(cate,index) in product" :key="index">
+            <div v-if="!showProDetail" class="know_group" v-for="(cate,index) in product" :key="index">
                 <div class="group_title">
                     <span class="title_label" v-html="cate.label" style="font-size:18px"></span>
                     <span class="showMore" style="font-size:14px">查看更多</span>
@@ -26,6 +26,56 @@
                             <span class="item_label" v-html="item.label"></span>
                             <span class="item_content">{{overString(item.content)}}</span>
                         </div>
+                    </el-col>
+                </el-row>
+            </div>
+            <div v-if="showProDetail">
+                <el-row>
+                    <el-col :span="18" :offset="2">
+                        <el-button icon="arrow-left" @click="showProDetail = false">返回</el-button>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="18" :offset="2">
+                        <el-tabs v-model="proDetailAct">
+                            <el-tab-pane label="基本介绍" name="product">
+                                <el-card :body-style="{ padding: '10px' }" class="pro_card">
+                                    <h3>{{proDetail.product.name}}</h3>
+                                    <div class="card_body">
+                                        <div class="left" style="margin-right:20px;">
+                                            <img :src="proDetail.product.image" class="image" width="200"  height="200">
+                                        </div>
+                                        <div class="right">
+                                            <p>[基本介绍]</p>
+                                            <p class="text-indent:2em" v-html="proDetail.product.description"></p>
+                                        </div>
+                                    </div>
+                                </el-card>
+                            </el-tab-pane>
+                            <el-tab-pane label="养殖技术" name="breed">
+                                <el-collapse>
+                                    <el-collapse-item  v-for="(item,index) in proDetail.breed" :title="item.title" :name="index" :key="index">
+                                        <p style="text-indent:2em" v-html="item.content"></p>
+                                    </el-collapse-item>
+                                </el-collapse>
+                            </el-tab-pane>
+                            <el-tab-pane label="病害防治" name="disease">
+                                <el-collapse>
+                                    <el-collapse-item  v-for="(item,index) in proDetail.disease"  :name="index" :key="index">
+                                        <template slot="title">
+                                            <img :src="item.image" alt="" width="30" height="30" style="vertical-align:middle;">
+                                            {{item.diseasename}}
+                                        </template>
+                                        <h4>[原因]</h4>
+                                        <p style="text-indent:2em" v-html="item.cause"></p>
+                                        <h4>[症状]</h4>
+                                        <p style="text-indent:2em" v-html="item.symptom"></p>
+                                        <h4>[预防]</h4>
+                                        <p style="text-indent:2em" v-html="item.treatment"></p>
+                                    </el-collapse-item>
+                                </el-collapse>
+                            </el-tab-pane>
+                        </el-tabs>
                     </el-col>
                 </el-row>
             </div>
@@ -127,8 +177,26 @@
                 </el-row>
             </div>
         </div>
-        <div>
-        
+        <div v-if="activeItem == 3" >
+            <div v-if="!showSeedDetail" class="know_group" style="padding-top:50px;">
+                <el-row :gutter="20" class="seed_body">
+                    <el-col :span="20" :offset="2" class="seed_item" v-for="(item,index) in seedList" :key="index" @click.native="getDrugDetail(item)">
+                        <div class="left">
+                            <img :src="item.img" alt="">
+                        </div>
+                        <div class="center">
+                            <h3>{{item.title}}</h3>
+                            <p>种类:{{item.subKind}}</p>
+                            <p style="text-indent:2em;" v-html="overString(item.content,170)"></p>
+                        
+                        </div>
+                        <div class="right">
+                            <p>{{item.location}}</p>
+                            <p>{{item.company}}</p>
+                        </div>
+                    </el-col>
+                </el-row>
+            </div>
         </div>
         <div>
         
@@ -164,6 +232,12 @@
                         children:[]
                     }
                 ],
+                proDetail:{
+                    product:{},
+                    breed:[],
+                    disease:[]
+                },
+                proDetailAct:"product",
                 feedList:[],
                 feedDetail:{
                     name:"",
@@ -187,8 +261,9 @@
             }
         },
         methods:{
-            overString(val){
-                return val.length>45 ? val.substring(0,45)+"..." : val
+            overString(val,len){
+                len =  len ? len :45
+                return val.length> len  ? val.substring(0,len)+"..." : val
             },
             //获取所有水产动物信息
             getProduct(req){
@@ -215,11 +290,18 @@
                 })
             },
             getProductDetail(item){
-                console.log(item)
+                // console.log(item)
                 const self = this;
                 self.$.get("/IntelligentAgriculture/product/productDetail",{productid:item.id},function(data){
                     data = JSON.parse(data);
-                    console.log(data)
+                    // console.log(data);
+                    data.res.product.image  =  "http://210.28.188.103:8080/IntelligentAgriculture/res/"+data.res.product.image,
+                    data.res.disease.map((item)=>{ item.image = "http://210.28.188.103:8080/IntelligentAgriculture/res/"+item.image}) 
+                    self.proDetail.product = data.res.product;
+                    self.proDetail.breed = data.res.breed;
+                    self.proDetail.disease = data.res.disease;
+                    self.proDetailAct  = "product";
+                    self.showProDetail = true;
                 })
             },
             //获取饲料
@@ -243,7 +325,7 @@
                 const self = this;
                 self.$.get("/IntelligentAgriculture/product/feedDetail",{productid:item.id},function(data){
                      data = JSON.parse(data);
-                     console.log(data)
+                    //  console.log(data)
                      self.feedDetail.name = data.res.name;
                      self.feedDetail.company = data.res.company;
                      self.feedDetail.tel = data.res.telphone;
@@ -291,15 +373,21 @@
                 self.$.get("/IntelligentAgriculture/product/seedList",req,function(data){
                     data = JSON.parse(data);
                     console.log(data)
-                    // self.feedList = []
-                    // for(const item of data.res){
-                    //     self.feedList.push({
-                    //         id:item.id,
-                    //         label:item.name,
-                    //         img:"http://210.28.188.103:8080/IntelligentAgriculture/res/"+item.image,
-                    //         content:item.manualinstruct
-                    //     })
-                    // }
+                    self.seedList = []
+                    for(const item of data.res){
+                        self.seedList.push({
+                            id:item.id,
+                            productid:item.productid,
+                            title:item.title,
+                            img:"http://210.28.188.103:8080/IntelligentAgriculture/res/"+item.image,
+                            content:item.description,
+                            company:item.company,
+                            contact:item.contact,
+                            tel:item.telphone,
+                            location:item.productplace,
+                            subKind:item.subkind
+                        })
+                    }
                 })
             },
             getSeedDetail(item){
@@ -321,7 +409,7 @@
                 const self = this;
                 self.$.get("/IntelligentAgriculture/product/commonList",req,function(data){
                     data = JSON.parse(data);
-                    console.log(data)
+                    // console.log(data)
                     // self.feedList = []
                     // for(const item of data.res){
                     //     self.feedList.push({
@@ -464,5 +552,31 @@
     .Detail  .introduc p{
         padding:10px;
         text-indent:2em;
+    }
+    .pro_card h3{
+        text-align:center;
+    }
+    .pro_card .card_body{
+        display:flex;
+    }
+
+
+    .seed_item{
+        display:flex;
+        margin-top:20px;    
+        min-height:120px;
+    }
+    .seed_item .left  img{
+        width:120px;
+        height:180px;
+        margin-right:10px;
+        border:1px solid #c7c7c7;
+    }
+    .seed_item .center{
+        flex:1;
+        margin-right:10px;
+    }
+    .seed_item .right{
+        width:200px;
     }
 </style>
