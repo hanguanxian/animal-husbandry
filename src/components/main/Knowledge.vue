@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="know_menu">
-            <div class="menu_item" 
-                v-for="(item,index) in menu" 
-                :key="index" 
+            <div class="menu_item"
+                v-for="(item,index) in menu"
+                :key="index"
                 :class="index == activeItem?'active':''"
                 @click="selectMenu(index)"
             >
@@ -11,6 +11,7 @@
                 <span class="en_label" v-html="item.en"></span>
             </div>
         </div>
+        <div class="knowledge">
         <div v-if="activeItem == 0">
             <div class="know_group" v-for="(cate,index) in product" :key="index">
                 <div class="group_title">
@@ -127,12 +128,41 @@
                 </el-row>
             </div>
         </div>
-        <div>
-        
+        <div v-if="activeItem == 3" >
+          <div>
+            <el-row style="border-bottom: 1px solid #eee;" class="seed" v-for="(seed,index) in seedList" :key="index" @click.native="getDrugDetail(item)">
+              <el-col :span="4">
+                  <img :src="'http://210.28.188.103:8080/IntelligentAgriculture/res/'+seed.image"/>
+              </el-col>
+              <el-col :span="20" style="padding: 10px 5px 10px 15px;">
+                <el-row>
+                  <el-col :span="18"><h3>{{seed.title}}</h3></el-col>
+                  <el-col :span="6">经验指数：6年</el-col>
+                </el-row>
+                <el-row style="padding: 18px 0 10px;">
+                  <el-col :span="18"><p>种类：{{ seed.subkind }}</p></el-col>
+                  <el-col :span="6">{{ seed.productplace }}</el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="18" style="padding-right: 20px;"><p>{{ seed.description.substring(0,50)+'...' || ''  }}</p></el-col>
+                  <el-col :span="6">{{ seed.company }}</el-col>
+                </el-row>
+              </el-col>
+              <el-col :span="4"></el-col>
+            </el-row>
+          </div>
         </div>
-        <div>
-        
+        <div v-if="activeItem == 4" >
+          <div class="allKnowledge">
+            <h2>养殖设备&nbsp;<i class="el-icon-d-arrow-right"></i></h2>
+            <el-row style="margin: 10px;" v-for="(equipment,index) in equipments" contenteditable="" :key="index">{{ equipment.title }}</el-row>
+          </div>
+          <div class="allKnowledge">
+            <h2>营养健康&nbsp;<i class="el-icon-d-arrow-right"></i></h2>
+            <el-row style="margin: 10px;" v-for="(nutrition,index) in nutritions" :key="index">{{ nutrition.title }}</el-row>
+          </div>
         </div>
+      </div>
     </div>
 </template>
 
@@ -148,7 +178,7 @@
                 menu:[
                     {label:"养殖百科",value:"",en:"Aquaculture Encyclopedia"},
                     {label:"饲料库",value:"",en:"Feed storage"},
-                    {label:"鱼药库",value:"",en:"Fish pharmacy store"},
+                    {label:"渔药库",value:"",en:"Fish pharmacy store"},
                     {label:"种苗库",value:"",en:"Seedling nursery"},
                     {label:"综合知识",value:"",en:"Comprehensive knowledge"}
                 ],
@@ -183,7 +213,8 @@
                 },
                 seedList:[],
                 commonList:[],
-
+                equipments:[],
+                nutritions:[]
             }
         },
         methods:{
@@ -289,8 +320,12 @@
             getSeed(req){
                 const self = this;
                 self.$.get("/IntelligentAgriculture/product/seedList",req,function(data){
-                    data = JSON.parse(data);
-                    console.log(data)
+                    let result = JSON.parse(data);
+                    //console.log('seed');
+                    if(result.resCode == 1) {
+                      self.seedList = result.res;
+                    }
+                    //console.log(data)
                     // self.feedList = []
                     // for(const item of data.res){
                     //     self.feedList.push({
@@ -320,8 +355,15 @@
             getCommon(req){
                 const self = this;
                 self.$.get("/IntelligentAgriculture/product/commonList",req,function(data){
-                    data = JSON.parse(data);
-                    console.log(data)
+                    let result = JSON.parse(data);
+                    if(result.resCode == 1 ) {
+                      if(req.kind=="营养健康") {
+                        self.nutritions = result.res;
+                      }else if(req.kind=="养殖设备") {
+                        self.equipments = result.res;
+                      }
+
+                    }
                     // self.feedList = []
                     // for(const item of data.res){
                     //     self.feedList.push({
@@ -357,7 +399,7 @@
         },
         mounted(){
             const self = this;
-            
+
             self.getProduct({kind:"水产",subKind:"蟹类",page:1})
             self.getProduct({kind:"水产",subKind:"虾类",page:1})
             self.getProduct({kind:"水产",subKind:"鱼类",page:1})
@@ -408,7 +450,7 @@
     .know_group .group_body .group_item{
         display:flex;
         height:120px;
-        overflow:hidden; 
+        overflow:hidden;
         text-overflow:ellipsis;
         cursor:pointer;
     }
@@ -428,15 +470,25 @@
         font-size:16px;
     }
     .know_group .group_body .group_item .right .item_content{
-        overflow:hidden; 
+        overflow:hidden;
         text-overflow:ellipsis;
-        display:-webkit-box; 
+        display:-webkit-box;
         -webkit-box-orient:vertical;
-        -webkit-line-clamp:3; 
+        -webkit-line-clamp:3;
         font-size:12px;
     }
-    
-
+    .knowledge {
+      width: 88%;
+      margin: 0 auto;
+    }
+    .seed {
+      margin: 15px 10px;
+      min-height: 140px;
+    }
+    .seed img {
+      display: block;
+      width: 100%;
+    }
     .Detail .info{
         display:flex;
         margin-top:20px;
@@ -464,5 +516,8 @@
     .Detail  .introduc p{
         padding:10px;
         text-indent:2em;
+    }
+    .allKnowledge {
+      margin-bottom: 20px;
     }
 </style>

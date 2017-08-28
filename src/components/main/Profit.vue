@@ -249,8 +249,8 @@
       </div>
     </div>
     <div style="border-bottom: 1px solid #000; min-height: 220px; margin-bottom: 30px;">
-      <div class="content-title">历史记录</div>
-      <el-row style="margin-bottom: 20px;"><el-col :span="3" :offset="21"><el-button style="background-color: #3a293a; color: #fff;">筛选结果</el-button></el-col></el-row>
+      <div class="content-title" style="margin-bottom: 10px;">历史记录</div>
+      <!-- <el-row style="margin-bottom: 20px;"><el-col :span="3" :offset="21"><el-button style="background-color: #3a293a; color: #fff;">筛选结果</el-button></el-col></el-row> -->
       <el-row>
         <el-col :span="4" :offset="2">
           <div>利润<span style="margin-left: 20px;">{{ allHistoryList.totalGain }}元</span></div>
@@ -332,6 +332,7 @@
     created() {
       const self = this;
       self.getTangKous();
+      self.allHistoryListByPage();
     },
     methods:{
       crabSaleSave(){
@@ -445,7 +446,8 @@
         self.$.post("/IntelligentAgriculture/cost/allHistoryListByPage",{page: self.allHistoryListPage},function(res){
           let result = JSON.parse(res);
           if(result.resCode == 1) {
-            self.allHistoryList = result;
+            self.allHistoryList = result.res;
+            console.log(self.allHistoryList);
           }
         })
       },

@@ -29,7 +29,7 @@
               </el-form-item>
               <el-form-item prop="power" label="用户类别:">
                 <el-select v-model="registForm.power" placeholder="请选择用户类别">
-                  <el-option label="普通用户" value="2"></el-option>
+                  <el-option label="普通用户" value="0"></el-option>
                   <el-option label="专家" value="1"></el-option>
                 </el-select>
               </el-form-item>
@@ -88,7 +88,7 @@
         loginUrl: "/interface/user/checklogin",
         registUrl: "/interface/user/register",
         loginForm: {
-          power:"1",
+          power:"0",
           userName: 'zhangsir',
           password: '12121212'
         },
