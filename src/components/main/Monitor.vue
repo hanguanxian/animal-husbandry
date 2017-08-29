@@ -10,8 +10,8 @@
       <el-tabs v-model="tabName" type="card" @tab-click="tangKouSelect">
         <el-tab-pane
           v-for="(tangKou, index) in tangKous"
-          :key="index" :label="tangKou.name"
-          :name="tangKou.name">
+          :key="index" :label="tangKou.sendescription"
+          :name="tangKou.sendescription">
         </el-tab-pane>
       </el-tabs>
       <div id="monitor-info">
@@ -113,7 +113,7 @@
       options: [],
       selectedOptions: ["320000", "320100", "320118"],
       tangKous: [],
-      tabName: '',
+      tabName: '0',
       tangKousForm: {
         areacode: '',
         facid: '',
@@ -206,7 +206,7 @@
     created() {
       this.options = area.areaOptions;
       //this.tangKou = {fid:1,cid:2,sid:'0102',order: '',name: '固城湖塘口1'};
-      this.tangKousForm.areacode = '0102';//TODO 登陆获取地区
+      this.tangKousForm.areacode = '320118';//TODO 登陆获取地区
       this.showTangKou();
     },
     methods: {
@@ -215,18 +215,18 @@
         let data = {areacode: self.tangKousForm.areacode}
         self.$.post('/IntelligentAgriculture/dataDisplay/showpound',data,function(res){
           //TODO 塘口列表展示 tangKous 赋值
-          let result = JSON.parse(res);
-          self.tangKous = [
-            {fid:1,cid:2,sid:'0102',order: '',name: '固城湖塘口1'},
-            {fid:1,cid:2,sid:'0304',order: '',name: '固城湖塘口2'},
-            {fid:2,cid:2,sid:'0102',order: '',name: '渔网大市场3'},
-            {fid:3,cid:2,sid:'0102',order: '',name: '渔网大市场4'},
-            {fid:4,cid:2,sid:'0102',order: '',name: '渔网大市场5'},
-            {fid:5,cid:2,sid:'0910',order: '',name: '固城湖威森'},
-            {fid:6,cid:2,sid:'0409',order: '',name: '实验室'},
-            {fid:7,cid:2,sid:'0',order: '43',name: '江宁基地'}];
-            //self.tangKous = result.res;
-            self.tabName = self.tangKous[0].name;
+            let result = JSON.parse(res);
+          // self.tangKous = [
+          //   {fid:1,cid:2,sid:'0102',order: '',name: '固城湖塘口1'},
+          //   {fid:1,cid:2,sid:'0304',order: '',name: '固城湖塘口2'},
+          //   {fid:2,cid:2,sid:'0102',order: '',name: '渔网大市场3'},
+          //   {fid:3,cid:2,sid:'0102',order: '',name: '渔网大市场4'},
+          //   {fid:4,cid:2,sid:'0102',order: '',name: '渔网大市场5'},
+          //   {fid:5,cid:2,sid:'0910',order: '',name: '固城湖威森'},
+          //   {fid:6,cid:2,sid:'0409',order: '',name: '实验室'},
+          //   {fid:7,cid:2,sid:'0',order: '43',name: '江宁基地'}];
+            self.tangKous = result.res;
+            self.tabName = self.tangKous[0].sendescription;
             self.tangKou = self.tangKous[0];
             self.dateTimeRange(60 * 60 * 24);
         })
@@ -242,9 +242,9 @@
       queryCurrentData(){
         const self = this;
         let data = {
-          facid: self.tangKou.fid,
-          comid: self.tangKou.cid,
-          senid: self.tangKou.sid
+          facid: self.tangKou.facID,
+          comid: self.tangKou.comID,
+          senid: self.tangKou.senID
         };
         self.$.post("/IntelligentAgriculture/dataDisplay/queryCurrentData",data,function(res){
           let result = JSON.parse(res);
@@ -271,9 +271,9 @@
         let startTime = new Date(self.chartForm.startTime).format("yyyy-MM-dd hh:mm:ss");
         let endTime = new Date(self.chartForm.endTime).format("yyyy-MM-dd hh:mm:ss");
         let data = {
-          facid: self.tangKou.fid,
-          comid: self.tangKou.cid,
-          senid: self.tangKou.sid,
+          facid: self.tangKou.facID,
+          comid: self.tangKou.comID,
+          senid: self.tangKou.senID,
           startTime: startTime,
           endTime: endTime
         };
@@ -301,30 +301,32 @@
       queryAppointedTime(){
         const self = this;
         self.queryCurrentData();
-        let startTime = self.chartForm.dateRange[0].format("yyyy-MM-dd hh:mm:ss");
-        let endTime = self.chartForm.dateRange[1].format("yyyy-MM-dd hh:mm:ss");
-        let startClock = self.chartForm.timeRange[0].format("hh:mm:ss");
-        let endClock = self.chartForm.timeRange[1].format("hh:mm:ss");
+        let startDate = self.chartForm.dateRange[0].format("yyyy-MM-dd");
+        let endDate = self.chartForm.dateRange[1].format("yyyy-MM-dd");
+        let startTime = self.chartForm.timeRange[0].format("hh:mm:ss");
+        let endTime = self.chartForm.timeRange[1].format("hh:mm:ss");
         let data = {
-          factoryid: self.tangKou.fid,
-          comid: self.tangKou.cid,
-          senid: self.tangKou.sid,
+          factoryid: self.tangKou.facID,
+          comid: self.tangKou.comID,
+          senid: self.tangKou.senID,
           startTime: startTime,
           endTime: endTime,
-          startClock: startClock,
-          endClock: endClock
+          startDate: startDate,
+          endDate: endDate
         };
 
         self.$.post('/IntelligentAgriculture/dataDisplay/queryAppointedTime',data,function(res){
-          self.option.xAxis[0].data = result.res.do_time;
-          for (var i = 0; i < self.option.legend.data.length; i++) {
-            if(self.option.legend.data[i] == "ph"){
-              self.initSerie('ph',result.res.ph_ph,0);
-    				}else if(self.option.legend.data[i] == "溶解氧"){
-              self.initSerie('溶解氧',result.res.do_do,1);
-    				}else if(self.option.legend.data[i] == "水温"){
-              self.initSerie('水温',result.res.do_temp,2);
-    				}
+          if(result.res){
+            self.option.xAxis[0].data = result.res.do_time;
+            for (var i = 0; i < self.option.legend.data.length; i++) {
+              if(self.option.legend.data[i] == "ph"){
+                self.initSerie('ph',result.res.ph_ph,0);
+      				}else if(self.option.legend.data[i] == "溶解氧"){
+                self.initSerie('溶解氧',result.res.do_do,1);
+      				}else if(self.option.legend.data[i] == "水温"){
+                self.initSerie('水温',result.res.do_temp,2);
+      				}
+            }
           }
         })
       },
