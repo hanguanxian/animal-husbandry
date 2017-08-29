@@ -28,26 +28,19 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/interface': {
-        target: 'http://210.28.188.103:8080/IntelligentAgriculture',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/interface': ''
-        }
-      },
       '/IntelligentAgriculture': {
          target: 'http://210.28.188.103:8080',
          changeOrigin: true,
          pathRewrite: {
            '^/IntelligentAgriculture': '/IntelligentAgriculture'
          }
-      },
-      '/breedingLog': {
-         target: 'http://210.28.188.103:8080',
-         changeOrigin: true,
-         pathRewrite: {
-           '^/breedingLog': '/breedingLog'
-         }
+      // },
+      // '/breedingLog': {
+      //    target: 'http://210.28.188.103:8080',
+      //    changeOrigin: true,
+      //    pathRewrite: {
+      //      '^/breedingLog': '/breedingLog'
+      //    }
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
