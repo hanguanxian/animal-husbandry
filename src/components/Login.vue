@@ -6,7 +6,7 @@
           <el-form :model="loginForm" ref="loginForm" label-width="100px" :rules="loginRules">
               <el-form-item prop="power" label="用户类别:">
                 <el-select v-model="loginForm.power" placeholder="请选择用户类别">
-                  <el-option label="普通用户" value="2"></el-option>
+                  <el-option label="普通用户" value="0"></el-option>
                   <el-option label="专家" value="1"></el-option>
                 </el-select>
               </el-form-item>
