@@ -1,6 +1,6 @@
 <template>
     <div class="breedingLog">
-        
+
         <el-row class="actTheme" style="border-bottom:1px solid #9b9b9b;">
             <el-col :span="12" style="padding-top:20px;padding-bottom:60px;">
                 <el-form ref="form_daily" :rules="daily_rule" :model="form_daily" label-width="90px">
@@ -116,7 +116,7 @@
                 </el-form>
             </el-col>
         </el-row>
-        
+
 
 
         <el-row>
@@ -233,7 +233,7 @@
                         placeholder="选择日期时间">
                     </el-date-picker>
                 </el-form-item>
-                
+
                 <el-form-item prop="exportType" label="导出内容">
                     <el-select v-model="form_export.exportType" placeholder="请选择导出内容">
                         <el-option v-for="(item,index) in formData.exportType" :label="item.label" :value="item.value" :key="index"></el-option>
@@ -365,7 +365,7 @@
             }
         },
         methods: {
-            /* 方法 */ 
+            /* 方法 */
            watchDataType(val){
                 const self = this;
                 for(const item of self.formData.dataType){
@@ -387,7 +387,7 @@
                 const self = this;
                 self.form_daily.goods.splice(index, 1);
             },
-            
+
             //获取当前用户塘口信息
             getPonds(){
                 const self = this;
@@ -423,7 +423,7 @@
                     }else if(data.resCode == 0){
                         self.$message.error("获取类别信息失败")
                     }
-                    
+
                 })
             },
             //获取巡检类别
@@ -435,10 +435,10 @@
                         value:"发绿"
                     },{
                         label:"发黑",
-                        value:"发黑"  
+                        value:"发黑"
                     },{
                         label:"正常",
-                        value:"正常"  
+                        value:"正常"
                     }
                 ]
                 let common = [   //通用选项  //过低 过高
@@ -569,7 +569,7 @@
                     }else if(data.resCode == 0){
                         self.$message.error("获取巡检类别失败")
                     }
-                    
+
                 })
             },
             //获取录入数据的类型
@@ -620,15 +620,33 @@
                             // //投放物名称
                             throw_price_all:self.form_daily.money,
                             //价格
-                            // throw_image:self.form_daily.picList,
+                            throw_image:self.form_daily.picList[0],
                             // //图片对象集合
                             throw_activetime:self.form_daily.date.toLocaleDateString()
                             // //活动时间
                         };
-                        console.log(data)
-                        self.$.post("/IntelligentAgriculture/breedingLog/throw",data,function(res){
-                            console.log(res)
-                        })
+                        console.log(data);
+                        var form = new FormData();
+                         form.append("throw_pondId",self.form_daily.pond);
+                         form.append("throw_dailyinputtype",self.form_daily.cate[0]);
+                         form.append("throw_sub_dailyinputtype",self.form_daily.cate[1] || "" );
+                         form.append("throw_name_edit",throw_name);
+                         form.append("throw_price_all",self.form_daily.money);
+                         form.append("throw_image",self.form_daily.picList[0]);
+                         form.append("throw_activetime",self.form_daily.date.format("yyyy-MM-dd hh:mm:ss"));
+                        　self.$.ajax({
+                               url:"/IntelligentAgriculture/breedingLog/throw",
+                               type:"post",
+                               data:form,
+                               processData:false,
+                               contentType:false,
+                               success:function(data){
+                                   console.log(data);
+                               }
+                        });
+                        // self.$.post("/IntelligentAgriculture/breedingLog/throw",data,function(res){
+                        //     console.log(res)
+                        // })
                     } else {
                         return false;
                     }
@@ -689,7 +707,7 @@
                     page: self.kind == 'throw' ? self.daily.curPage : self.polling.curPage,
                     kind: self.kind
                 }
-                
+
                 self.$.get("/IntelligentAgriculture/breedingLog/showMyLog",data,function(data){
                     data = JSON.parse(data);
                     if(data.resCode == 1){
@@ -739,7 +757,7 @@
             //表格中查看图片
             checkImg(index,row){
                 const self = this;
-                // let pic = row.pic.replace(/\[|\]/g,""); 
+                // let pic = row.pic.replace(/\[|\]/g,"");
                 let data1 = {
                     names : row.pic
                 }
@@ -757,7 +775,7 @@
                     }
                 })
             },
-         
+
             //导出表格内容
             exportTable(formName){
                 const self = this;
@@ -778,7 +796,7 @@
                     form.attr('action',"IntelligentAgriculture/breedingLog/export");
                     form.attr("method","POST");
                     form.attr('enctype',"multipart/form-data")
-                    form.submit(); 
+                    form.submit();
                     self.$("#excel").remove()
                     self.resetForm(formName);
                     self.exportDialogShow = false;

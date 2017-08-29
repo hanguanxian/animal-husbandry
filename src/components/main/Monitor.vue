@@ -51,7 +51,7 @@
           </el-col>
         </el-row>
       </div>
-      <el-row>
+      <el-row style="padding-left: 20px;">
         <el-form :inline="true" :model="chartForm">
           <el-form-item>
             <el-button type="primary" @click="chartForm.byDataTime = !chartForm.byDataTime">{{ chartForm.byDataTime ? "按时区" : "按时段" }}</el-button>
@@ -96,7 +96,9 @@
           </template>
         </el-form>
       </el-row>
-      <IEcharts class="echarts" :option="option"></IEcharts>
+      <div style="padding: 10px;">
+        <IEcharts class="echarts" :option="option"></IEcharts>
+      </div>
   </el-row >
 </template>
 
@@ -282,15 +284,17 @@
         }
         self.$.post(dataUrl,data,function(res){
           let result = JSON.parse(res);
-          self.option.xAxis[0].data = result.res.do_time;
-          for (var i = 0; i < self.option.legend.data.length; i++) {
-            if(self.option.legend.data[i] == "ph"){
-              self.initSerie('ph',result.res.ph_ph,0);
-    				}else if(self.option.legend.data[i] == "溶解氧"){
-              self.initSerie('溶解氧',result.res.do_do,1);
-    				}else if(self.option.legend.data[i] == "水温"){
-              self.initSerie('水温',result.res.do_temp,2);
-    				}
+          if(result.res){
+            self.option.xAxis[0].data = result.res.do_time;
+            for (var i = 0; i < self.option.legend.data.length; i++) {
+              if(self.option.legend.data[i] == "ph"){
+                self.initSerie('ph',result.res.ph_ph,0);
+      				}else if(self.option.legend.data[i] == "溶解氧"){
+                self.initSerie('溶解氧',result.res.do_do,1);
+      				}else if(self.option.legend.data[i] == "水温"){
+                self.initSerie('水温',result.res.do_temp,2);
+      				}
+            }
           }
         })
       },
