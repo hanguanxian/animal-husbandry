@@ -6,7 +6,7 @@
         <div class="tab menu_tab"
             v-for="(tangkou,index) in tangKous"
             :class="{active: index == pondid}"
-            :key="index" @click="pondid = tangkou.id">
+            :key="index" @click="poundSelected(index)">
           <div :class="'wrapper wrapper' + index % 3">
             <span class="label" v-html="tangkou.pondName"></span>
           </div>
@@ -335,6 +335,9 @@
       self.allHistoryListByPage();
     },
     methods:{
+      poundSelected(index){
+        this.pondid = index;
+      },
       crabSaleSave(){
         const self = this;
         self.tabForm5.pondId = self.pondid;
