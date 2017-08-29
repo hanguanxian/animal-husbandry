@@ -4,7 +4,7 @@
 			<el-col :span="24" style="position:relative">
 				<el-carousel trigger="click" height="380px">
 					<el-carousel-item v-for="item in 4" :key="item">
-						<h3>{{ item }}</h3>
+						<h3></h3>
 					</el-carousel-item>
 				</el-carousel>
 				<div class="bus_and_tec">
@@ -38,7 +38,7 @@
 						<span class="news_item_title">新疆北园市场:一周市场分析</span>
 						<span class="news_item_time">2017-08-16</span>
 					</li>
-					
+
 				</ul>
 
 			</el-col>
@@ -52,14 +52,14 @@
 						<el-col :span="12" v-for="n in 2" :key='n'>
 							<div class="pic_news_item">
 								<img src="../../assets/index/2.gif" alt="">
-								<p>5月6日小龙虾批发价格(北京农贸大市场)</p>	
+								<p>5月6日小龙虾批发价格(北京农贸大市场)</p>
 							</div>
 						</el-col>
 					</el-row>
 				</div>
 			</el-col>
 		</el-row>
-		
+
 	</div>
 </template>
 
@@ -76,18 +76,18 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-	
-	
-	
-	
+
+
+
+
 	.settings_menu i {
 		margin-right: 5px;
 	}
-	
+
 	.el-carousel__item:nth-child(2n) {
 		background-color: #99a9bf;
 	}
-	
+
 	.el-carousel__item:nth-child(2n+1) {
 		background-color: #d3dce6;
 	}
@@ -155,7 +155,7 @@
 		line-height: 22px;
 	}
 	.news{
-		min-height:300px;	
+		min-height:300px;
 	}
 	.news_title{
 		display: flex;
@@ -200,6 +200,6 @@
 		text-align: center;
 	}
 
-	
+
 
 </style>

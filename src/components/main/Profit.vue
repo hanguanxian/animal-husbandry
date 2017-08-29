@@ -119,7 +119,7 @@
         </el-form>
       </div>
       <div v-if="activeAction == 3">
-        <el-form :inline="true" :model="tabForm4" class="inlineForm">
+        <el-form :inline="true" :model="tabForm4" class="inlineForm tabForm4">
             <div>
               <el-col :span="2" class="label">水质调节</el-col>
               <el-form-item prop="num1" label="肥料">
@@ -249,17 +249,17 @@
       </div>
     </div>
     <div style="border-bottom: 1px solid #000; min-height: 220px; margin-bottom: 30px;">
-      <div class="content-title">历史记录</div>
-      <el-row style="margin-bottom: 20px;"><el-col :span="3" :offset="21"><el-button style="background-color: #3a293a; color: #fff;">筛选结果</el-button></el-col></el-row>
+      <div class="content-title" style="margin-bottom: 10px;">历史记录</div>
+      <!-- <el-row style="margin-bottom: 20px;"><el-col :span="3" :offset="21"><el-button style="background-color: #3a293a; color: #fff;">筛选结果</el-button></el-col></el-row> -->
       <el-row>
         <el-col :span="4" :offset="2">
-          <div>利润<span style="margin-left: 20px;">2453元</span></div>
-          <div>收入<span style="margin-left: 20px;">2453元</span></div>
-          <div>支出<span style="margin-left: 20px;">2453元</span></div>
+          <div>利润<span style="margin-left: 20px;">{{ allHistoryList.totalGain }}元</span></div>
+          <div>收入<span style="margin-left: 20px;">{{ allHistoryList.totalSale }}元</span></div>
+          <div>支出<span style="margin-left: 20px;">{{ allHistoryList.totalCost }}元</span></div>
         </el-col>
         <el-col :span="18">
-          <el-col :span="12" class="historyData">
-            2017-08-24 16:00:39<span class="typeName">普通员工</span> -20元
+          <el-col :span="12" class="historyData" v-for="(record, index) in allHistoryList.hisRecords" :key="index">
+            {{ new Date(record.sysTime).format("yyyy-MM-dd hh:mm:ss") }}<span class="typeName">{{ record.name }}</span> {{ record.value }}元
           </el-col>
           <el-col :span="12" class="historyData">
             2017-08-24 16:00:39<span class="typeName">普通员工</span> -20元
@@ -324,12 +324,15 @@
           time: ""
         },
         benefitValue: {},
+        allHistoryList: {},
+        allHistoryListPage: 1,
         countIndex: 1
       }
     },
     created() {
       const self = this;
       self.getTangKous();
+      self.allHistoryListByPage();
     },
     methods:{
       crabSaleSave(){
@@ -425,6 +428,29 @@
           }
         })
       },
+      historyByPondByPage(pondid){
+        const self = this;
+        let data = {
+          pondid: pondid,
+          page: self.allHistoryListPage
+        }
+        self.$.post("/IntelligentAgriculture/cost/allHistoryListByPage",data,function(res){
+          let result = JSON.parse(res);
+          if(result.resCode == 1) {
+            self.allHistoryList = result;
+          }
+        })
+      },
+      allHistoryListByPage(){
+        const self = this;
+        self.$.post("/IntelligentAgriculture/cost/allHistoryListByPage",{page: self.allHistoryListPage},function(res){
+          let result = JSON.parse(res);
+          if(result.resCode == 1) {
+            self.allHistoryList = result.res;
+            console.log(self.allHistoryList);
+          }
+        })
+      },
       getTangKous(){
         const self = this;
         self.$.post("/IntelligentAgriculture/PondInfo/showPondinfos",{time: new Date()},function(res){
@@ -503,6 +529,9 @@
   }
   .inlineForm {
     padding: 30px 5px;
+  }
+  .tabForm4.inlineForm .el-input__inner{
+    width: 80px;
   }
   .polyculture.inlineForm {
     padding-top: 0;

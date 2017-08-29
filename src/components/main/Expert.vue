@@ -17,7 +17,7 @@
                     <el-col :span="12" class="group_item" v-for="(item,index) in expertList" :key="index">
                         <div class="left">
                             <div class="avatar">
-                                <img :src="item.headImg" alt="">
+                                <img :src="'http://210.28.188.103:8080/IntelligentAgriculture/res/'+item.headImg">
                             </div>
                         </div>
                         <div class="right">

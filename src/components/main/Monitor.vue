@@ -7,11 +7,11 @@
           @change="areaChange">
         </el-cascader>
       </div>
-      <el-tabs v-model="tabName" type="card">
+      <el-tabs v-model="tabName" type="card" @tab-click="tangKouSelect">
         <el-tab-pane
           v-for="(tangKou, index) in tangKous"
           :key="index" :label="tangKou.name"
-          :name="tangKou.name" @tab-click="tangKouSelect(index)">
+          :name="tangKou.name">
         </el-tab-pane>
       </el-tabs>
       <div id="monitor-info">
@@ -56,31 +56,47 @@
           <el-form-item>
             <el-button type="primary" @click="chartForm.byDataTime = !chartForm.byDataTime">{{ chartForm.byDataTime ? "按时区" : "按时段" }}</el-button>
           </el-form-item>
-          <el-form-item label="时间范围" v-show="chartForm.byDataTime">
-            <el-select v-model="chartForm.dateRange" @change="dateTimeRange" placeholder="时间范围">
-              <el-option label="近一天" :value="60 * 60 * 24"></el-option>
-              <el-option label="近三天" :value="60 * 60 * 24 * 3"></el-option>
-              <el-option label="近一周" :value="60 * 60 * 24 * 7"></el-option>
-              <el-option label="近一月" :value="60 * 60 * 24 * 30"></el-option>
-              <el-option label="近三月" :value="60 * 60 * 24 * 90"></el-option>
-              <el-option label="近半年" :value="60 * 60 * 24 * 180"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="开始时间" v-show="chartForm.byDataTime">
-            <el-date-picker v-model="chartForm.startTime" type="datetime" placeholder="开始时间">
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item label="结束时间" v-show="chartForm.byDataTime">
-            <el-date-picker v-model="chartForm.endTime" type="datetime" placeholder="结束时间">
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="">查询数据</el-button>
-          </el-form-item>
+          <template v-if="chartForm.byDataTime">
+            <el-form-item label="时间范围">
+              <el-select v-model="chartForm.selectable" @change="dateTimeRange" placeholder="时间范围">
+                <el-option label="近一天" :value="60 * 60 * 24"></el-option>
+                <el-option label="近三天" :value="60 * 60 * 24 * 3"></el-option>
+                <el-option label="近一周" :value="60 * 60 * 24 * 7"></el-option>
+                <el-option label="近一月" :value="60 * 60 * 24 * 30"></el-option>
+                <el-option label="近三月" :value="60 * 60 * 24 * 90"></el-option>
+                <el-option label="近半年" :value="60 * 60 * 24 * 180"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="开始时间">
+              <el-date-picker v-model="chartForm.startTime" type="datetime" placeholder="开始时间">
+              </el-date-picker>
+            </el-form-item>
+
+            <el-form-item label="结束时间">
+              <el-date-picker v-model="chartForm.endTime" type="datetime" placeholder="结束时间">
+              </el-date-picker>
+            </el-form-item>
+
+            <el-form-item>
+              <el-button type="primary" @click="queryHistoryData">查询数据</el-button>
+            </el-form-item>
+          </template>
+          <template v-else>
+            <el-form-item label="日期范围">
+              <el-date-picker v-model="chartForm.dateRange" type="daterange" placeholder="日期范围">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="时间段范围">
+                <el-time-picker is-range v-model="chartForm.timeRange" placeholder="选择时间段范围">
+                </el-time-picker>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="queryAppointedTime">查询数据</el-button>
+            </el-form-item>
+          </template>
         </el-form>
       </el-row>
       <IEcharts class="echarts" :option="option"></IEcharts>
-      <button @click="doRandom">Random</button>
   </el-row >
 </template>
 
@@ -93,7 +109,7 @@
     },
     data: () => ({
       options: [],
-      selectedOptions: [],
+      selectedOptions: ["320000", "320100", "320118"],
       tangKous: [],
       tabName: '',
       tangKousForm: {
@@ -112,9 +128,11 @@
       endTime: '',
       chartForm: {
         byDataTime: true,
-        dateRange: 60 * 60 * 24,
-        startTime: '',
-        endTime: '',
+        selectable: 60 * 60 * 24,
+        dateRange: [],//按时段字段
+        timeRange:[],//按时段字段
+        startTime: '',//按时区字段
+        endTime: '',//按时区字段
       },
       option: {
         title: {
@@ -190,19 +208,12 @@
       this.showTangKou();
     },
     methods: {
-      doRandom() {
-        const that = this;
-        let data = [];
-        for (let i = 0, min = 5, max = 99; i < 6; i++) {
-          data.push(Math.floor(Math.random() * (max + 1 - min) + min));
-        }
-        that.bar.series[0].data = data;
-      },
       showTangKou(){
         const self = this;
         let data = {areacode: self.tangKousForm.areacode}
         self.$.post('/IntelligentAgriculture/dataDisplay/showpound',data,function(res){
           //TODO 塘口列表展示 tangKous 赋值
+          let result = JSON.parse(res);
           self.tangKous = [
             {fid:1,cid:2,sid:'0102',order: '',name: '固城湖塘口1'},
             {fid:1,cid:2,sid:'0304',order: '',name: '固城湖塘口2'},
@@ -212,13 +223,19 @@
             {fid:5,cid:2,sid:'0910',order: '',name: '固城湖威森'},
             {fid:6,cid:2,sid:'0409',order: '',name: '实验室'},
             {fid:7,cid:2,sid:'0',order: '43',name: '江宁基地'}];
-            self.tangKouSelect(0);
+            //self.tangKous = result.res;
             self.tabName = self.tangKous[0].name;
+            self.tangKou = self.tangKous[0];
             self.dateTimeRange(60 * 60 * 24);
         })
       },
-      tangKouSelect(index){//塘口选择
-        this.tangKou = this.tangKous[index];
+      tangKouSelect(tab, event){//塘口选择
+        console.log(tab);
+        const self = this;
+        let index = parseInt(tab.index);
+        self.tangKou = self.tangKous[index];
+        this.option.series = [];
+        self.dateTimeRange(60 * 60 * 24);
       },
       queryCurrentData(){
         const self = this;
@@ -241,22 +258,26 @@
                 self.currentData.oxygen = result.res[i].value || '';
                 break;
               default:
-
             }
           }
         })
       },
-      queryHistoryData(value){
+      queryHistoryData(){
         const self = this;
+        self.queryCurrentData();
+
+        let startTime = new Date(self.chartForm.startTime).format("yyyy-MM-dd hh:mm:ss");
+        let endTime = new Date(self.chartForm.endTime).format("yyyy-MM-dd hh:mm:ss");
         let data = {
           facid: self.tangKou.fid,
           comid: self.tangKou.cid,
           senid: self.tangKou.sid,
-          startTime: self.chartForm.startTime,
-          endTime: self.chartForm.endTime
+          startTime: startTime,
+          endTime: endTime
         };
         let dataUrl = "/IntelligentAgriculture/dataDisplay/queryHistoryData";
-        if(value > (60 * 60 * 24 * 30)) {
+        let value = self.chartForm.endTime.getTime() - self.chartForm.startTime.getTime()
+        if(value/1000 > (60 * 60 * 24 * 30)) {
           dataUrl = "/IntelligentAgriculture/dataDisplay/queryIntegration";
         }
         self.$.post(dataUrl,data,function(res){
@@ -266,54 +287,67 @@
             if(self.option.legend.data[i] == "ph"){
               self.initSerie('ph',result.res.ph_ph,0);
     				}else if(self.option.legend.data[i] == "溶解氧"){
-              self.initSerie('溶解氧',result.res.do_do,0);
+              self.initSerie('溶解氧',result.res.do_do,1);
     				}else if(self.option.legend.data[i] == "水温"){
-              self.initSerie('水温',result.res.do_temp,0);
+              self.initSerie('水温',result.res.do_temp,2);
     				}
           }
         })
       },
       queryAppointedTime(){
         const self = this;
+        self.queryCurrentData();
+        let startTime = self.chartForm.dateRange[0].format("yyyy-MM-dd hh:mm:ss");
+        let endTime = self.chartForm.dateRange[1].format("yyyy-MM-dd hh:mm:ss");
+        let startClock = self.chartForm.timeRange[0].format("hh:mm:ss");
+        let endClock = self.chartForm.timeRange[1].format("hh:mm:ss");
         let data = {
           factoryid: self.tangKou.fid,
           comid: self.tangKou.cid,
           senid: self.tangKou.sid,
-          startTime: self.chartForm.startTime,
-          endTime: self.chartForm.endTime,
-          startClock: '',
-          endClock: ''
+          startTime: startTime,
+          endTime: endTime,
+          startClock: startClock,
+          endClock: endClock
         };
 
         self.$.post('/IntelligentAgriculture/dataDisplay/queryAppointedTime',data,function(res){
-          console.log(res);
+          self.option.xAxis[0].data = result.res.do_time;
+          for (var i = 0; i < self.option.legend.data.length; i++) {
+            if(self.option.legend.data[i] == "ph"){
+              self.initSerie('ph',result.res.ph_ph,0);
+    				}else if(self.option.legend.data[i] == "溶解氧"){
+              self.initSerie('溶解氧',result.res.do_do,1);
+    				}else if(self.option.legend.data[i] == "水温"){
+              self.initSerie('水温',result.res.do_temp,2);
+    				}
+          }
         })
       },
       initSerie(name,data,index) {
         let serie = {
           name: name,
           type: 'line',
-          xAxisIndex: index,
-          yAxisIndex: index,
+          //xAxisIndex: 0,
+          //yAxisIndex: 0,
           data: data
         }
-        this.option.series.push(serie);
+        this.option.series[index] = serie;
       },
       areaChange(arrValue) {//地区选择
         const self = this;
+        console.log(arrValue);
         self.tangKousForm.areacode = arrValue[2];
         self.showTangKou();
       },
       dateTimeRange(value){
         const self = this;
         let now = new Date();
-        self.chartForm.endTime = now.format("yyyy-MM-dd hh:mm:ss");
-        self.chartForm.startTime = new Date(now.getTime() - value*1000).format("yyyy-MM-dd hh:mm:ss");
-        console.log(self.chartForm);
-        self.queryCurrentData();
-        self.queryHistoryData(value);
-      },
-      onClick() {
+        self.chartForm.endTime = now;
+        self.chartForm.startTime = new Date(now.getTime() - value*1000);
+        //console.log(self.chartForm);
+        //self.queryCurrentData();
+        self.queryHistoryData();
       }
     }
   };
@@ -322,10 +356,13 @@
 <style>
   .echarts {
     width: 100%;
-    height: 400px;
+    min-height: 400px;
   }
   .el-tabs--card>.el-tabs__header .el-tabs__item.is-active, .el-tabs__header {
     border: none !important;
+  }
+  .el-tabs--card>.el-tabs__header .el-tabs__item {
+    transition: none;
   }
   .areaSelect {
     margin: 20px;
