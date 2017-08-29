@@ -2,23 +2,28 @@
     <div class='main'>
         <div class="header">
             <el-row class="container">
+                <div class="top-banner">
+                  <img src="../../../static/images/menu.jpg"/>
+                  <router-link :to="{path: '/information'}" class="setting"><i class="el-icon-setting"></i>配置管理</router-link>
+                </div>
                 <el-col :span="24">
                     <el-menu :router="true" :default-active="$route.path" class="el-menu" mode="horizontal">
-                        <el-menu-item index="/main/index" class="logo"><span>&nbsp;</span></el-menu-item>
+                        <!-- <el-menu-item index="/main/index" class="logo"><span>&nbsp;</span></el-menu-item> -->
                         <el-menu-item index="/main/index">首页</el-menu-item>
                         <el-menu-item index="/main/monitor">环境监测</el-menu-item>
                         <el-menu-item index="/main/breedingLog">养殖日志</el-menu-item>
                         <el-menu-item index="/main/profit">经济效益</el-menu-item>
                         <el-menu-item index="/main/expert">专家指导</el-menu-item>
                         <el-menu-item index="/main/knowledge">知识库</el-menu-item>
-                        <el-menu-item index="/information" class="settings_menu">
+                        <!-- <el-menu-item index="/information" class="settings_menu">
                             <i class="el-icon-setting"></i>配置管理
-                        </el-menu-item>
+                        </el-menu-item> -->
                     </el-menu>
                 </el-col>
+
             </el-row>
         </div>
-        
+
         <router-view class="body container"></router-view>
         <el-row style="background:#262e39">
 			<el-col :span="24" class="footer">
@@ -26,7 +31,7 @@
 			</el-col>
 		</el-row>
     </div>
-    
+
 </template>
 
 <script>
@@ -42,7 +47,7 @@
     }
 </script>
 
-<style scoped> 
+<style scoped>
     .header{
         position:fixed;
         width:100%;
@@ -67,7 +72,18 @@
     .el-menu {
 		padding: 5px 20px;
 	}
-	
+  .top-banner {
+    position: relative;
+  }
+  .top-banner .setting {
+    position: absolute;
+    color: #000;
+    right: 5%;
+    top: 40%;
+  }
+  .top-banner img {
+    width: 100%;
+  }
 	.logo {
 		display: inline-block;
 		width: 120px;
@@ -83,7 +99,7 @@
 		line-height: 150px;
 		margin: 0;
 	}
-	
+
 	.settings_menu {
 		position: relative;
 		right: 0;
