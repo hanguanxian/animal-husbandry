@@ -85,8 +85,8 @@
       return {
         title: '用户登录',
         registerFlag: false,
-        loginUrl: "/interface/user/checklogin",
-        registUrl: "/interface/user/register",
+        loginUrl: "/IntelligentAgriculture/user/checklogin",
+        registUrl: "/IntelligentAgriculture/user/register",
         loginForm: {
           power:"0",
           userName: 'zhangsir',
