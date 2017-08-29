@@ -5,7 +5,7 @@
       <el-row class="tabs menu_tabs">
         <div class="tab menu_tab"
             v-for="(tangkou,index) in tangKous"
-            :class="{active: index == pondid}"
+            :class="{active: index == poundIndex}"
             :key="index" @click="poundSelected(index)">
           <div :class="'wrapper wrapper' + index % 3">
             <span class="label" v-html="tangkou.pondName"></span>
@@ -273,11 +273,11 @@
 <script>
     export default {
     data () {
-
       return {
         tangKous: [],
         actions: ['租金','种苗','劳务成本','日常投放','销售额'],
-        pondid: 0,
+        pondid: '',
+        poundIndex: 0,
         activeAction: 0,
         tabForm1:{
           count: '',
@@ -332,11 +332,15 @@
     created() {
       const self = this;
       self.getTangKous();
-      self.allHistoryListByPage();
     },
     methods:{
       poundSelected(index){
-        this.pondid = index;
+        const self = this;
+        self.poundIndex = index;
+        self.pondid = self.tangKous[index].id;
+        self.dailyInputDataCost();
+        self.getBenefitValueByPond();
+        self.allHistoryListByPage();
       },
       crabSaleSave(){
         const self = this;
@@ -460,9 +464,7 @@
           let result = JSON.parse(res);
           if(result.res.length > 0) {
             self.tangKous = result.res;
-            self.pondid = self.tangKous[0].id
-            self.dailyInputDataCost();
-            self.getBenefitValueByPond();
+            self.poundSelected(0);
           }
           //console.log(self.tangKous);
         })
@@ -565,7 +567,8 @@
     font-size: 16px;
   }
   .historyData {
-    text-align: center;
+    text-align: left;
+    padding: 7px 0px;
   }
   .typeName {
     margin: 0 10px;
