@@ -634,15 +634,15 @@
                          form.append("throw_price_all",self.form_daily.money);
                          form.append("throw_image",self.form_daily.picList[0]);
                          form.append("throw_activetime",self.form_daily.date.format("yyyy-MM-dd hh:mm:ss"));
-                        　self.$.ajax({
-                               url:"/IntelligentAgriculture/breedingLog/throw",
-                               type:"post",
-                               data:form,
-                               processData:false,
-                               contentType:false,
-                               success:function(data){
-                                   console.log(data);
-                               }
+                         self.$.ajax({
+                             url:"/IntelligentAgriculture/breedingLog/throw",
+                             type:"post",
+                             data:form,
+                             processData:false,
+                             contentType:false,
+                             success:function(data){
+                                 console.log(data);
+                             }
                         });
                         // self.$.post("/IntelligentAgriculture/breedingLog/throw",data,function(res){
                         //     console.log(res)

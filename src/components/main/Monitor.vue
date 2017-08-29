@@ -206,7 +206,7 @@
     created() {
       this.options = area.areaOptions;
       //this.tangKou = {fid:1,cid:2,sid:'0102',order: '',name: '固城湖塘口1'};
-      this.tangKousForm.areacode = '0102';//TODO 登陆获取地区
+      this.tangKousForm.areacode = '320118';//TODO 登陆获取地区
       this.showTangKou();
     },
     methods: {
@@ -216,15 +216,7 @@
         self.$.post('/IntelligentAgriculture/dataDisplay/showpound',data,function(res){
           //TODO 塘口列表展示 tangKous 赋值
           let result = JSON.parse(res);
-          self.tangKous = [
-            {fid:1,cid:2,sid:'0102',order: '',name: '固城湖塘口1'},
-            {fid:1,cid:2,sid:'0304',order: '',name: '固城湖塘口2'},
-            {fid:2,cid:2,sid:'0102',order: '',name: '渔网大市场3'},
-            {fid:3,cid:2,sid:'0102',order: '',name: '渔网大市场4'},
-            {fid:4,cid:2,sid:'0102',order: '',name: '渔网大市场5'},
-            {fid:5,cid:2,sid:'0910',order: '',name: '固城湖威森'},
-            {fid:6,cid:2,sid:'0409',order: '',name: '实验室'},
-            {fid:7,cid:2,sid:'0',order: '43',name: '江宁基地'}];
+          self.tangKous = result.res;
             //self.tangKous = result.res;
             self.tabName = self.tangKous[0].name;
             self.tangKou = self.tangKous[0];
