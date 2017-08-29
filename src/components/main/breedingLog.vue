@@ -720,7 +720,7 @@
                                 self.formData.tb_polling.push({
                                     id:i++,
                                     pond:item.Pond_Name,
-                                    content:item.ContentType,
+                                    content:item.ContentType + ":" +item.ContentStatus,
                                     inputData:item.Name+item.Value || "",
                                     pic:item.ImageUrl,
                                     date:item.ActiveTime
