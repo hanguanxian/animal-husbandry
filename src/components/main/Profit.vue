@@ -1,5 +1,5 @@
 <template>
-  <el-row class="content">
+  <el-row class="content profit">
     <div class="content-title" style="padding: 20px;">塘口选择</div>
     <div style="border-bottom: 1px solid #000; min-height: 380px; margin-bottom: 30px;">
       <el-row class="tabs menu_tabs">
@@ -545,11 +545,11 @@
     text-align: center;
     line-height: 38px;
   }
-  .el-input__icon+.el-input__inner {
+  .profit .el-input__icon+.el-input__inner {
     padding-left: 10px;
     width: 80px;
   }
-  .specailSelect .el-input__icon+.el-input__inner {
+  .profit .specailSelect .el-input__icon+.el-input__inner {
     width: 120px;
   }
   .count {
