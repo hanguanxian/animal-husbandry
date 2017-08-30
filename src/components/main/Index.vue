@@ -76,10 +76,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-
-
-
 	.settings_menu i {
 		margin-right: 5px;
 	}

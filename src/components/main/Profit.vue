@@ -472,7 +472,7 @@
     }
   }
 </script>
-<style>
+<style scoped>
   .body.container {
     box-sizing: border-box;
     background-color: #f8f8f8;
