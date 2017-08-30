@@ -52,7 +52,7 @@
         </el-row>
       </div>
       <el-row style="padding-left: 20px;">
-        <el-form :inline="true" :model="chartForm">
+        <el-form :inline="true" :model="chartForm" style="text-align: center; margin: 10px 0;">
           <el-form-item>
             <el-button type="primary" @click="chartForm.byDataTime = !chartForm.byDataTime">{{ chartForm.byDataTime ? "按时区" : "按时段" }}</el-button>
           </el-form-item>
@@ -138,6 +138,7 @@
       },
       option: {
         title: {
+          left: "150px",
           text: '水产传感数器采集数据'
         },
         tooltip: {

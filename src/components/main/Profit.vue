@@ -545,7 +545,7 @@
     text-align: center;
     line-height: 38px;
   }
-  .profit .el-input__icon+.el-input__inner {
+  .el-input__icon+.el-input__inner {
     padding-left: 10px;
     width: 80px;
   }

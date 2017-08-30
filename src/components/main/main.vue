@@ -7,22 +7,22 @@
         <router-link :to="{path: '/information'}" class="setting"><i class="el-icon-setting"></i>  配置管理</router-link>
       </div>
       <el-row>
-        <el-col :span="4" class="menu-item">
+        <el-col :span="4" class="menuItem">
           <router-link :to="{path: '/main/index'}"> 首页</router-link>
         </el-col>
-        <el-col :span="4" class="menu-item">
+        <el-col :span="4" class="menuItem">
           <router-link :to="{path: '/main/monitor'}"> 环境监测</router-link>
         </el-col>
-        <el-col :span="4" class="menu-item">
+        <el-col :span="4" class="menuItem">
           <router-link :to="{path: '/main/breedingLog'}" >养殖日志</router-link>
         </el-col>
-        <el-col :span="4" class="menu-item">
+        <el-col :span="4" class="menuItem">
           <router-link :to="{path: '/main/profit'}">经济效益</router-link>
         </el-col>
-        <el-col :span="4" class="menu-item">
+        <el-col :span="4" class="menuItem">
           <router-link :to="{path: '/main/expert'}" >专家指导</router-link>
         </el-col>
-        <el-col :span="4" class="menu-item">
+        <el-col :span="4" class="menuItem">
           <router-link :to="{path: '/main/knowledge'}">知识库</router-link>
         </el-col>
       </el-row>
@@ -41,11 +41,10 @@
 export default {
   data() {
     return {
-
+      activeMenu: 1
     }
   },
-  mounted() {
-    console.log(this.$route.path)
+  methods: {
   }
 }
 </script>
@@ -58,7 +57,7 @@ export default {
 }
 
 .container {
-  width: 80%;
+  max-width: 1200px;
   min-width: 960px;
   margin: 0 auto;
 }
@@ -97,18 +96,19 @@ export default {
   width: 100%;
 }
 
-.menu-item {
+.menuItem {
   text-align: center;
   height: 80px;
   line-height: 80px;
   color: #000;
 }
 
-.menu-item:hover {
+.menuItem:hover,.menuItem.active {
+  color: #098994;
   border-bottom: 5px solid #098994;
 }
 
-.menu-item a {
+.menuItem a {
   display: block;
 }
 
