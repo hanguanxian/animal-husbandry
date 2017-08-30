@@ -30,6 +30,9 @@
 				copyright &copy;2016 All rights reserved.
 			</el-col>
 		</el-row>
+        <div class="goTop" @click="goTop">
+            回到顶部
+        </div>
     </div>
 
 </template>
@@ -38,11 +41,23 @@
     export default {
         data() {
             return {
-
+            }
+        },
+        methods:{
+            pathChange(){
+                const self = this;
+                self.goTop();
+            },
+            goTop(){
+                const self = this;
+                self.$('html, body').animate({scrollTop:0}, 'fast');
             }
         },
         mounted(){
             console.log(this.$route.path)
+        },
+        watch:{
+            '$route':'pathChange'
         }
     }
 </script>
@@ -66,7 +81,7 @@
         background:#f8f8f8;
     }
     .body{
-        padding-top:70px;
+        padding-top:294px;
         min-height:806px;
     }
     .el-menu {
