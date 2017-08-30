@@ -60,11 +60,6 @@
             '$route':'pathChange'
         }
     }
-  },
-  mounted() {
-    console.log(this.$route.path)
-  }
-}
 </script>
 
 <style scoped>
