@@ -31,7 +31,7 @@
 			</el-col>
 		</el-row>
         <div class="goTop" @click="goTop">
-            回到顶部
+            <i class="el-icon-arrow-up"></i>回到顶部
         </div>
     </div>
 
@@ -128,4 +128,11 @@
 		text-align:center;
 		color:#fff;
 	}
+    .goTop{
+        position:fixed;
+        bottom:110px;
+        right:30px;
+        width:16px;
+        font-size:16px;
+    }
 </style>

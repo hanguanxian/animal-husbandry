@@ -17,12 +17,12 @@
 			</el-col>
 		</el-row>
 		<el-row :gutter="20" style="background-color:#f2f7fd;margin:0">
-			<el-col :span="6" v-for="n in 4" :key="n">
+			<el-col :span="6" v-for="(item,index) in title" :key="index">
 				<div class="grid-content">
 					<div class="content_icon"></div>
-					<h2 class="content_title">水产产品</h2>
+					<h2 class="content_title">{{item}}</h2>
 					<p class="content_detail">
-						箱的心得，本篇将理论结合实际，为大家剖析冰箱选购的的那些事，当然了文章还是以抛砖引玉为主，欢迎大家多多交流和探讨。
+						9月、10月以来，加州鲈头箍鱼开始陆续出鱼，养殖户喜迎丰收。然而，出鱼过程会出现应激死鱼；出鱼之后又会出现受伤感染死鱼，造成养殖户较大损失。
 					</p>
 				</div>
 			</el-col>
@@ -69,6 +69,7 @@
 		data() {
 			return {
 				activeIndex: '1',
+				title:["水产产品","水产技术","水产专家","水产数据"]
 			}
 		}
 	}

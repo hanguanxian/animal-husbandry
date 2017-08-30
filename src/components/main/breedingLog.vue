@@ -312,6 +312,12 @@
                         required: true,
                         message: '请选择数据类型',
                         trigger: 'change'
+                    }],
+                    num:[{
+                        // type: "number",
+                        required: true,
+                        message: '请输入数值',
+                        trigger: 'change'
                     }]
                 },
                 form_export: {
@@ -853,6 +859,7 @@
                             processData: false,
                             contentType: false,
                             success: function(data) {
+                                data = JSON.parse(data)
                                 if (data.resCode == 1) {
                                     self.$message.success("提交成功!");
                                     self.getTableDate();
@@ -935,19 +942,19 @@
             checkImg(index, row) {
                 const self = this;
                 if(row.pic.length>2){
-                    window.open("/IntelligentAgriculture/patrolManage/loadImages?names="+row.pic)
-                    // self.$.post("/IntelligentAgriculture/breedingLog/loadImages",row.pic,function(data){
-                    //     data = JSON.parse(data);
-                    //     if(data.resCode == 1){
-                    //         if(data.res.length == 0){
-                    //             self.$message.info("暂无图片")
-                    //         }else{
-                    //             console.log(data.res)
-                    //         }
-                    //     }else if(data.resCode == 0){
-                    //         self.$message.error("获取图片失败")
-                    //     }
-                    // })
+                    // window.open("/IntelligentAgriculture/patrolManage/loadImages?names="+row.pic)
+                    self.$.post("/IntelligentAgriculture/breedingLog/loadImages",{names:row.pic},function(data){
+                        data = JSON.parse(data);
+                        if(data.resCode == 1){
+                            if(data.res.length == 0){
+                                self.$message.info("暂无图片")
+                            }else{
+                                window.open(data.res)
+                            }
+                        }else if(data.resCode == 0){
+                            self.$message.error("获取图片失败")
+                        }
+                    })
                 }else{
                     self.$message.info("暂无图片")
                 }
@@ -966,9 +973,9 @@
                     self.$('body').append(form);
                     var input1 = self.$("<input type='text' name='startTime'></input>");
                     var input2 = self.$("<input type='text' name='endTime'></input>");
-                    var input3 = self.$("<input type='text' name='content_select'></input>");
-                    input1.attr('value', start.toLocaleDateString())
-                    input2.attr('value', end.toLocaleDateString())
+                    var input3 = self.$("<input type='text' name='content_selected'></input>");
+                    input1.attr('value', start.format("yyyy-MM-dd hh:mm:ss"))
+                    input2.attr('value', end.format("yyyy-MM-dd hh:mm:ss"))
                     input3.attr('value', self.form_export.exportType)
                     form.append(input1, input2, input3)
                     form.attr('action', "IntelligentAgriculture/breedingLog/export");
