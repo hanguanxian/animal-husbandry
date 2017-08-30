@@ -1,11 +1,12 @@
 <template>
     <div class="breedingLog">
-
+    
         <el-row class="actTheme" style="border-bottom:1px solid #9b9b9b;">
             <el-col :span="12" style="padding-top:20px;padding-bottom:60px;">
                 <el-form ref="form_daily" :rules="daily_rule" :model="form_daily" label-width="90px">
                     <el-form-item>
-                        <template slot="label"><span class="theme_title">日常投放</span></template>
+                        <template slot="label"><span class="theme_title">日常投放</span>
+</template>
                     </el-form-item>
                     <el-form-item prop="pond" label="塘口选择">
                         <el-select v-model="form_daily.pond"  placeholder="请选择塘口">
@@ -26,7 +27,9 @@
 
                     <el-form-item prop="money" label="投放总额">
                         <el-input placeholder="总金额" v-model="form_daily.money">
-                            <template slot="append">元</template>
+<template slot="append">
+    元
+</template>
                         </el-input>
                     </el-form-item>
                     <el-form-item prop="picList" label="上传图片">
@@ -56,7 +59,9 @@
             <el-col :span="12" style="padding-left:40px;padding-top:20px;padding-bottom:60px;">
                 <el-form ref="form_polling" :model="form_polling" :rules="polling_rule" label-width="80px">
                     <el-form-item>
-                        <template slot="label"><span class="theme_title">巡视检查</span></template>
+<template slot="label">
+    <span class="theme_title">巡视检查</span>
+</template>
                     </el-form-item>
                     <el-form-item prop="pond" label="塘口选择">
                         <el-select v-model="form_polling.pond" placeholder="请选择塘口">
@@ -157,9 +162,10 @@
                     </el-table-column>
                     <el-table-column
                         label="图片">
-                        <template scope="scope">
-                            <el-button  type="primary" size="small" @click.native="checkImg(scope.$index, scope.row)">点击查看</el-button>
-                        </template>
+<template scope="scope">
+    <el-button type="primary" size="small" @click.native="checkImg(scope.$index, scope.row)">
+        点击查看</el-button>
+</template>
                     </el-table-column>
                     <el-table-column
                         prop="date"
@@ -198,9 +204,10 @@
                     </el-table-column>
                     <el-table-column
                         label="图片">
-                        <template scope="scope">
-                            <el-button  type="primary" size="small" @click.native="checkImg(scope.$index, scope.row)">点击查看</el-button>
-                        </template>
+<template scope="scope">
+    <el-button type="primary" size="small" @click.native="checkImg(scope.$index, scope.row)">
+        点击查看</el-button>
+</template>
                     </el-table-column>
                     <el-table-column
                         prop="date"
@@ -254,75 +261,90 @@
         data() {
             return {
                 form_daily: {
-                    pond:"",
-                    cate:[],
-                    goods:[
-                        {name:"",value:""}
-                    ],
-                    money:"",
-                    picList:[],
-                    date:new Date()
+                    pond: "",
+                    cate: [],
+                    goods: [{
+                        name: "",
+                        value: ""
+                    }],
+                    money: "",
+                    picList: [],
+                    date: new Date()
                 },
-                daily_rule:{
-                    pond:[
-                        {type:"number",required: true, message: '请选择塘口',trigger: 'change'}
-                    ],
-                    cate:[
-                        {type:"array",required: true, message: '请选择投放物类别',trigger: 'change'}
-                    ]
+                daily_rule: {
+                    pond: [{
+                        type: "number",
+                        required: true,
+                        message: '请选择塘口',
+                        trigger: 'change'
+                    }],
+                    cate: [{
+                        type: "array",
+                        required: true,
+                        message: '请选择投放物类别',
+                        trigger: 'change'
+                    }]
                 },
-                form_polling:{
-                    pond:"",
-                    content:[],
-                    inputData:"",
-                    selectData:'',
-                    num:"",
-                    picList:[],
-                    date:new Date()
+                form_polling: {
+                    pond: "",
+                    content: [],
+                    inputData: "",
+                    selectData: '',
+                    num: "",
+                    picList: [],
+                    date: new Date()
                 },
-                polling_rule:{
-                    pond:[
-                        {type:"number",required: true, message: '请选择塘口',trigger: 'change'}
-                    ],
-                    content:[
-                        {type:"array",required: true, message: '请选择巡视内容',trigger: 'change'}
-                    ],
-                    selectData:[
-                        {type:"number",required: true, message: '请选择数据类型',trigger: 'change'}
-                    ]
+                polling_rule: {
+                    pond: [{
+                        type: "number",
+                        required: true,
+                        message: '请选择塘口',
+                        trigger: 'change'
+                    }],
+                    content: [{
+                        type: "array",
+                        required: true,
+                        message: '请选择巡视内容',
+                        trigger: 'change'
+                    }],
+                    selectData: [{
+                        type: "number",
+                        required: true,
+                        message: '请选择数据类型',
+                        trigger: 'change'
+                    }]
                 },
-                form_export:{
-                    startTime:"2017/7/1",
-                    endTime:new Date(),
-                    exportType:"全部",
+                form_export: {
+                    startTime: "2017/7/1",
+                    endTime: new Date(),
+                    exportType: "全部",
                 },
-                formData:{
-                    pondList:[],
-                    putCateList:[],
-                    polling_content:[
-                        {
-                            label:"水质",
-                            value:"水质",
-                            children:[]
+                formData: {
+                    pondList: [],
+                    putCateList: [],
+                    polling_content: [{
+                            label: "水质",
+                            value: "水质",
+                            children: []
                         },
                         {
-                            label:"螃蟹",
-                            value:"螃蟹",
-                            children:[]
+                            label: "螃蟹",
+                            value: "螃蟹",
+                            children: []
                         },
                         {
-                            label:"虾",
-                            value:"虾",
-                            children:[]
+                            label: "虾",
+                            value: "虾",
+                            children: []
                         },
                         {
-                            label:"鱼",
-                            value:"鱼",
-                            children:[]
+                            label: "鱼",
+                            value: "鱼",
+                            children: []
                         },
                     ],
-                    dataType:[],
-                    tb_daily:[],
+                    dataType: [],
+                    tb_daily: [],
                     // tb_daily:this.utils.arrRepeat([{
                     //     id:"0",
                     //     name:"测试五",
@@ -332,7 +354,7 @@
                     //     pic:["asdasd"],
                     //     date:"2018-08-19 08:00"
                     // }]),
-                    tb_polling:[],
+                    tb_polling: [],
                     // tb_polling:this.utils.arrRepeat([{
                     //     id:"0",
                     //     pond:"固城湖",
@@ -341,209 +363,370 @@
                     //     pic:["asdasd"],
                     //     date:"2018-08-19 08:00"
                     // }]),
-                    exportType:[
-                        {label:"全部",value:"全部"},
-                        {label:"日常投放",value:"日常投放"},
-                        {label:"巡视检查",value:"巡视检查"},
+                    exportType: [{
+                            label: "全部",
+                            value: "全部"
+                        },
+                        {
+                            label: "日常投放",
+                            value: "日常投放"
+                        },
+                        {
+                            label: "巡视检查",
+                            value: "巡视检查"
+                        },
                     ]
                 },
-                addTheme:"0",
-                myTheme:"0",
-                daily:{
-                    curPage:1,
-                    totalRecode:0,
-                    totalPages:1
+                addTheme: "0",
+                myTheme: "0",
+                daily: {
+                    curPage: 1,
+                    totalRecode: 0,
+                    totalPages: 1
                 },
-                polling:{
-                    curPage:1,
-                    totalRecode:0,
-                    totalPages:1
+                polling: {
+                    curPage: 1,
+                    totalRecode: 0,
+                    totalPages: 1
                 },
-                kind:"throw",
-                exportDialogShow:false,
-                range:""
+                kind: "throw",
+                exportDialogShow: false,
+                range: ""
             }
         },
         methods: {
             /* 方法 */
-           watchDataType(val){
+            watchDataType(val) {
                 const self = this;
-                for(const item of self.formData.dataType){
-                    if(val==item.value){
-                        self.range =  "(正常值 "+item.range+")"
+                for (const item of self.formData.dataType) {
+                    if (val == item.value) {
+                        self.range = "(正常值 " + item.range + ")"
                     }
                 }
             },
             /* 页面方法 */
             //新增物品
-            addGoods(){
+            addGoods() {
                 const self = this;
-                self.form_daily.goods.push(
-                     {name:"",value:""}
-                )
+                self.form_daily.goods.push({
+                    name: "",
+                    value: ""
+                })
             },
             //删除物品
-            delGoods(index){
+            delGoods(index) {
                 const self = this;
                 self.form_daily.goods.splice(index, 1);
             },
-
+    
             //获取当前用户塘口信息
-            getPonds(){
+            getPonds() {
                 const self = this;
-                self.$.get("/IntelligentAgriculture/PondInfo/showPondinfos",function(data){
+                self.$.get("/IntelligentAgriculture/PondInfo/showPondinfos", function(data) {
                     data = JSON.parse(data);
-                    if(data.resCode == 1){
+                    if (data.resCode == 1) {
                         self.formData.pondList = [];
-                        for(const item of data.res){
+                        for (const item of data.res) {
                             self.formData.pondList.push({
-                                name:item.pondName,
-                                value:item.id
+                                name: item.pondName,
+                                value: item.id
                             })
                         }
-                    }else if(data.resCode == 0){
+                    } else if (data.resCode == 0) {
                         self.$message.error('获取塘口信息失败');
                     }
                 })
             },
             //获取输入标签
-            getDailyInputType(){
+            getDailyInputType() {
                 const self = this;
-                self.$.get("/IntelligentAgriculture/breedingLog/dailyInputType",function(data){
+                self.$.get("/IntelligentAgriculture/breedingLog/dailyInputType", function(data) {
                     data = JSON.parse(data);
                     console.log(data)
-                    if(data.resCode == 1){
+                    if (data.resCode == 1) {
                         self.formData.putCateList = [];
-                        for(const item of data.res){
+                        for (const item of data.res) {
                             self.formData.putCateList.push({
-                                label:item.inputtypename,
-                                value:item.inputtype
+                                label: item.inputtypename,
+                                value: item.inputtype
                             })
                         }
-                    }else if(data.resCode == 0){
+                    } else if (data.resCode == 0) {
                         self.$message.error("获取类别信息失败")
                     }
-
+    
                 })
             },
             //获取巡检类别
-            getPollingType(){
+            getPollingType() {
                 const self = this;
-                let ssState = [    //水质三级选项
+                let ssState = [ //水质三级选项
                     {
-                        label:"发绿",
-                        value:"发绿"
-                    },{
-                        label:"发黑",
-                        value:"发黑"
-                    },{
-                        label:"正常",
-                        value:"正常"
+                        label: "发绿",
+                        value: "发绿"
+                    }, {
+                        label: "发黑",
+                        value: "发黑"
+                    }, {
+                        label: "正常",
+                        value: "正常"
                     }
                 ]
-                let common = [   //通用选项  //过低 过高
-                    {label:"过低",value:"过低"},
-                    {label:"偏低",value:"偏低"},
-                    {label:"正常",value:"正常"},
-                    {label:"偏高",value:"偏高"},
-                    {label:"过高",value:"过高"}
+                let common = [ //通用选项  //过低 过高
+                    {
+                        label: "过低",
+                        value: "过低"
+                    },
+                    {
+                        label: "偏低",
+                        value: "偏低"
+                    },
+                    {
+                        label: "正常",
+                        value: "正常"
+                    },
+                    {
+                        label: "偏高",
+                        value: "偏高"
+                    },
+                    {
+                        label: "过高",
+                        value: "过高"
+                    }
                 ]
-                let chiliao = [
-                    {label:"太少",value:"太少"},
-                    {label:"偏少",value:"偏少"},
-                    {label:"正常",value:"正常"},
-                    {label:"偏多",value:"偏多"},
-                    {label:"太多",value:"太多"}
+                let chiliao = [{
+                        label: "太少",
+                        value: "太少"
+                    },
+                    {
+                        label: "偏少",
+                        value: "偏少"
+                    },
+                    {
+                        label: "正常",
+                        value: "正常"
+                    },
+                    {
+                        label: "偏多",
+                        value: "偏多"
+                    },
+                    {
+                        label: "太多",
+                        value: "太多"
+                    }
                 ]
-                let huodongli = [
-                    {label:"很弱",value:"很弱"},
-                    {label:"偏弱",value:"偏弱"},
-                    {label:"正常",value:"正常"},
-                    {label:"偏强",value:"偏强"},
-                    {label:"过强",value:"过强"}
+                let huodongli = [{
+                        label: "很弱",
+                        value: "很弱"
+                    },
+                    {
+                        label: "偏弱",
+                        value: "偏弱"
+                    },
+                    {
+                        label: "正常",
+                        value: "正常"
+                    },
+                    {
+                        label: "偏强",
+                        value: "偏强"
+                    },
+                    {
+                        label: "过强",
+                        value: "过强"
+                    }
                 ]
-                let xingwei = [
-                    {label:"常浮上水面",value:"常浮上水面"},
-                    {label:"常浮到池边",value:"常浮到池边"},
-                    {label:"正常",value:"正常"},
-                    {label:"常在深水区",value:"常在深水区"},
-                    {label:"常吐泡沫",value:"常吐泡沫"},
-                    {label:"持续颤抖",value:"持续颤抖"},
-                    {label:"极少死亡",value:"极少死亡"},
-                    {label:"少量死亡",value:"少量死亡"},
-                    {label:"大量死亡",value:"大量死亡"},
+                let xingwei = [{
+                        label: "常浮上水面",
+                        value: "常浮上水面"
+                    },
+                    {
+                        label: "常浮到池边",
+                        value: "常浮到池边"
+                    },
+                    {
+                        label: "正常",
+                        value: "正常"
+                    },
+                    {
+                        label: "常在深水区",
+                        value: "常在深水区"
+                    },
+                    {
+                        label: "常吐泡沫",
+                        value: "常吐泡沫"
+                    },
+                    {
+                        label: "持续颤抖",
+                        value: "持续颤抖"
+                    },
+                    {
+                        label: "极少死亡",
+                        value: "极少死亡"
+                    },
+                    {
+                        label: "少量死亡",
+                        value: "少量死亡"
+                    },
+                    {
+                        label: "大量死亡",
+                        value: "大量死亡"
+                    },
                 ]
-                function buweiState(){
-                    return [
-                        {label:"腐烂",value:"腐烂"},
-                        {label:"斑点",value:"斑点"},
-                        {label:"正常",value:"正常"},
-                        {label:"发黑",value:"发黑"},
-                        {label:"发白",value:"发白"},
-                        {label:"发绿",value:"发绿"},
-                        {label:"发红",value:"发红"},
-                        {label:"水肿",value:"水肿"},
-                        {label:"发红",value:"发红"},
-                        {label:"少量脱落",value:"少量脱落"},
-                        {label:"大量脱落",value:"大量脱落"},
+    
+                function buweiState() {
+                    return [{
+                            label: "腐烂",
+                            value: "腐烂"
+                        },
+                        {
+                            label: "斑点",
+                            value: "斑点"
+                        },
+                        {
+                            label: "正常",
+                            value: "正常"
+                        },
+                        {
+                            label: "发黑",
+                            value: "发黑"
+                        },
+                        {
+                            label: "发白",
+                            value: "发白"
+                        },
+                        {
+                            label: "发绿",
+                            value: "发绿"
+                        },
+                        {
+                            label: "发红",
+                            value: "发红"
+                        },
+                        {
+                            label: "水肿",
+                            value: "水肿"
+                        },
+                        {
+                            label: "发红",
+                            value: "发红"
+                        },
+                        {
+                            label: "少量脱落",
+                            value: "少量脱落"
+                        },
+                        {
+                            label: "大量脱落",
+                            value: "大量脱落"
+                        },
                     ]
                 }
-                let buwei = [
-                    {label:"蟹钳",value:"蟹钳",children:buweiState()},
-                    {label:"附肢",value:"附肢",children:buweiState()},
-                    {label:"头壳",value:"头壳",children:buweiState()},
-                    {label:"腮",value:"腮",children:buweiState()},
-                    {label:"腹部",value:"腹部",children:buweiState()},
-                    {label:"触须",value:"触须",children:buweiState()},
+                let buwei = [{
+                        label: "蟹钳",
+                        value: "蟹钳",
+                        children: buweiState()
+                    },
+                    {
+                        label: "附肢",
+                        value: "附肢",
+                        children: buweiState()
+                    },
+                    {
+                        label: "头壳",
+                        value: "头壳",
+                        children: buweiState()
+                    },
+                    {
+                        label: "腮",
+                        value: "腮",
+                        children: buweiState()
+                    },
+                    {
+                        label: "腹部",
+                        value: "腹部",
+                        children: buweiState()
+                    },
+                    {
+                        label: "触须",
+                        value: "触须",
+                        children: buweiState()
+                    },
                 ]
-                let yu_buwei=[
-                    {label:"鳞",value:"鳞",children:buweiState()},
-                    {label:"嘴",value:"嘴",children:buweiState()},
-                    {label:"腮",value:"腮",children:buweiState()},
-                    {label:"腹部",value:"腹部",children:buweiState()},
-                    {label:"尾部",value:"尾部",children:buweiState()},
+                let yu_buwei = [{
+                        label: "鳞",
+                        value: "鳞",
+                        children: buweiState()
+                    },
+                    {
+                        label: "嘴",
+                        value: "嘴",
+                        children: buweiState()
+                    },
+                    {
+                        label: "腮",
+                        value: "腮",
+                        children: buweiState()
+                    },
+                    {
+                        label: "腹部",
+                        value: "腹部",
+                        children: buweiState()
+                    },
+                    {
+                        label: "尾部",
+                        value: "尾部",
+                        children: buweiState()
+                    },
                 ]
-                let tuoke = [
-                    {label:"提前",value:"提前"},
-                    {label:"正常",value:"正常"},
-                    {label:"推迟",value:"推迟"},
+                let tuoke = [{
+                        label: "提前",
+                        value: "提前"
+                    },
+                    {
+                        label: "正常",
+                        value: "正常"
+                    },
+                    {
+                        label: "推迟",
+                        value: "推迟"
+                    },
                 ]
-                self.$.get("/IntelligentAgriculture/breedingLog/showPatrolType",function(data){
+                self.$.get("/IntelligentAgriculture/breedingLog/showPatrolType", function(data) {
                     data = JSON.parse(data);
-                     console.log(data)
-                    if(data.resCode == 1){
-                        for(const item of data.res){
-                            if(item.name=="水色"){
+                    console.log(data)
+                    if (data.resCode == 1) {
+                        for (const item of data.res) {
+                            if (item.name == "水色") {
                                 self.formData.polling_content[0].children.push({
-                                    label:item.name,
-                                    value:item.patroltype,
-                                    children:ssState
+                                    label: item.name,
+                                    value: item.patroltype,
+                                    children: ssState
                                 })
-                            }else if(item.name=="水肥度" || item.name=="水透明度" || item.name=="水温" || item.name=="溶解氧"){
+                            } else if (item.name == "水肥度" || item.name == "水透明度" || item.name == "水温" || item.name == "溶解氧") {
                                 self.formData.polling_content[0].children.push({
-                                    label:item.name,
-                                    value:item.patroltype,
-                                    children:common
+                                    label: item.name,
+                                    value: item.patroltype,
+                                    children: common
                                 })
-                            }else if(item.name == "体征"){
+                            } else if (item.name == "体征") {
                                 self.formData.polling_content[1].children.push({
-                                    label:item.name,
-                                    value:item.patroltype,
-                                    children:buwei
+                                    label: item.name,
+                                    value: item.patroltype,
+                                    children: buwei
                                 })
                                 self.formData.polling_content[2].children.push({
-                                    label:item.name,
-                                    value:item.patroltype,
-                                    children:buwei
+                                    label: item.name,
+                                    value: item.patroltype,
+                                    children: buwei
                                 })
                                 self.formData.polling_content[3].children.push({
-                                    label:item.name,
-                                    value:item.patroltype,
-                                    children:yu_buwei
+                                    label: item.name,
+                                    value: item.patroltype,
+                                    children: yu_buwei
                                 })
-                            }else{
+                            } else {
                                 let threeMenu;
-                                switch (item.name){
+                                switch (item.name) {
                                     case "吃料":
                                         threeMenu = chiliao;
                                         break;
@@ -557,245 +740,240 @@
                                         threeMenu = tuoke;
                                         break
                                 }
-                                for(let i=1;i<self.formData.polling_content.length;i++){
+                                for (let i = 1; i < self.formData.polling_content.length; i++) {
                                     self.formData.polling_content[i].children.push({
-                                        label:item.name,
-                                        value:item.patroltype,
-                                        children:threeMenu
+                                        label: item.name,
+                                        value: item.patroltype,
+                                        children: threeMenu
                                     })
                                 }
                             }
                         }
-                    }else if(data.resCode == 0){
+                    } else if (data.resCode == 0) {
                         self.$message.error("获取巡检类别失败")
                     }
-
+    
                 })
             },
             //获取录入数据的类型
-            getInputDataType(){
+            getInputDataType() {
                 const self = this;
-                self.$.get("/IntelligentAgriculture/breedingLog/showManualData",function(data){
+                self.$.get("/IntelligentAgriculture/breedingLog/showManualData", function(data) {
                     data = JSON.parse(data);
-                    if(data.resCode == 1){
+                    if (data.resCode == 1) {
                         self.formData.dataType = [];
-                        for(const item of data.res){
+                        for (const item of data.res) {
                             self.formData.dataType.push({
-                                label:item.name,
-                                value:item.datatype,
-                                range:item.range
+                                label: item.name,
+                                value: item.datatype,
+                                range: item.range
                             })
                         }
-                    }else if(data.resCode == 0){
+                    } else if (data.resCode == 0) {
                         self.$message.error("获取数据类型失败")
                     }
                 })
             },
             //拦截图片
-            form_daily_hold(file){
+            form_daily_hold(file) {
+                this.form_daily.picList = [];
                 this.form_daily.picList.push(file);
                 return false;
             },
-            form_polling_hold(file){
+            form_polling_hold(file) {
+                this.form_polling.picList = [];
                 this.form_polling.picList.push(file);
                 return false;
             },
             //提交日志
-            onDaily(formName){
+            onDaily(formName) {
                 const self = this;
                 self.$refs[formName].validate((valid) => {
                     if (valid) {
-                        console.log(self.form_daily)
-                        let throw_name = [];
-                        self.form_daily.goods.forEach((item)=>{return item.value && throw_name.push(item.value)});
-                        throw_name = throw_name.join(",")
-                        let data = {
-                            throw_pondId: self.form_daily.pond,
-                            //水域唯一标识
-                            throw_dailyinputtype:self.form_daily.cate[0],
-                            //投放物类别
-                            throw_sub_dailyinputtype:self.form_daily.cate[1] || "" ,
-                            //投放物子类别
-                            throw_name_edit:throw_name,
-                            // //投放物名称
-                            throw_price_all:self.form_daily.money,
-                            //价格
-                            throw_image:self.form_daily.picList[0],
-                            // //图片对象集合
-                            throw_activetime:self.form_daily.date.toLocaleDateString()
-                            // //活动时间
-                        };
-                        console.log(data);
                         var form = new FormData();
-                         form.append("throw_pondId",self.form_daily.pond);
-                         form.append("throw_dailyinputtype",self.form_daily.cate[0]);
-                         form.append("throw_sub_dailyinputtype",self.form_daily.cate[1] || "" );
-                         form.append("throw_name_edit",throw_name);
-                         form.append("throw_price_all",self.form_daily.money);
-                         form.append("throw_image",self.form_daily.picList[0]);
-                         form.append("throw_activetime",self.form_daily.date.format("yyyy-MM-dd hh:mm:ss"));
-                         self.$.ajax({
-                             url:"/IntelligentAgriculture/breedingLog/throw",
-                             type:"post",
-                             data:form,
-                             processData:false,
-                             contentType:false,
-                             success:function(data){
-                                 console.log(data);
-                             }
+                        form.append("throw_pondId", self.form_daily.pond);
+                        form.append("throw_dailyinputtype", self.form_daily.cate[0]);
+                        form.append("throw_sub_dailyinputtype", self.form_daily.cate[1] || "");
+                        self.form_daily.goods.forEach((item) => {
+                            form.append("throw_name_edit", item.value);
                         });
-                        // self.$.post("/IntelligentAgriculture/breedingLog/throw",data,function(res){
-                        //     console.log(res)
-                        // })
+                        form.append("throw_price_all", self.form_daily.money);
+                        self.form_daily.picList.length > 0 ? form.append("throw_image", self.form_daily.picList[0]) : form.append("throw_image", new File([""], ""));
+                        form.append("throw_activetime", self.form_daily.date.format("yyyy-MM-dd hh:mm:ss"));　
+                        self.$.ajax({
+                            url: "/IntelligentAgriculture/breedingLog/throw",
+                            type: "post",
+                            data: form,
+                            processData: false,
+                            contentType: false,
+                            success: function(data) {
+                                data = JSON.parse(data);
+                                if (data.resCode == 1) {
+                                    self.$message.success("提交成功!");
+                                    self.getTableDate();
+                                    self.resetForm(formName);
+                                } else if (data.resCode == 0) {
+                                    self.$message.error("提交失败!")
+                                }
+                            }
+                        });
                     } else {
                         return false;
                     }
                 });
             },
             //提交巡检
-            onPolling(formName){
+            onPolling(formName) {
                 const self = this;
                 self.$refs[formName].validate((valid) => {
-                   if(valid){
-                       var content = self.form_polling.content;
-                       let data = {
-                           pondId:self.form_polling.pond,
-                           //水域唯一标识
-                           patrolTarget:content[0],
-                           //巡视检查对象
-                           patrolContentType1:content[1] || "",
-                           //当对象是水质时，对应的类别;
-                           patrolContentType2: content[1] || "",
-                           //当对象是螃蟹/虾/鱼时，对应的类别
-                           patrolContentStatus: content.length > 3 ? content[3] : content[2],
-                           //状态内容，例如偏低、正常、偏高
-                           patrolTargetPart:content.length > 3 ? content[2] : "",
-                           //当选择“体征”时，弹出的部位选择框，因此对应的是螃蟹/虾/鱼的部位
-                           //录入数据：
-                           islog: self.form_polling.inputData == 'yes' ? 'yes':'no', //对应是否录入数据的元素标签值，取值为yes或no
-                           catalog:self.form_polling.selectData,
-                           //录入的数据类型
-                           Ranges:self.form_polling.num,
-                           //录入的数据范围
-                           files:self.form_polling.picList,
-                           //图片对象集合
-                           activeTime:self.form_polling.date.toLocaleDateString(),
-                           //活动时间
-                       };
-                       self.$.post("/IntelligentAgriculture/breedingLog/patrol",data,function(res){
-                           console.log(res)
-                       })
-                   }else{
-                       return false;
-                   }
+                    if (valid) {
+                        var content = self.form_polling.content;
+                        var form = new FormData();
+                        form.append("pondId", self.form_polling.pond);
+                        form.append("patrolTarget", content[0]);
+                        if (content[0] == "水质") {
+                            form.append("patrolContentType1", content[1] || "");
+                            form.append("patrolContentType2", 0);
+                        } else {
+                            form.append("patrolContentType1", 0);
+                            form.append("patrolContentType2", content[1] || "");
+                        }
+                        form.append("patrolContentStatus", content.length > 3 ? content[3] : content[2]);
+                        form.append("patrolTargetPart", content.length > 3 ? content[2] : 0);
+                        form.append("islog", self.form_polling.inputData == 'yes' ? 'yes' : 'no');
+                        form.append("catalog", self.form_polling.selectData || 0);
+                        form.append("ranges", self.form_polling.num || "");
+                        self.form_polling.picList.length > 0 ? form.append("files", self.form_polling.picList[0]) : form.append("files", new File([""], ""));
+    
+                        form.append("activeTime", self.form_polling.date.format("yyyy-MM-dd hh:mm:ss"));　
+                        self.$.ajax({
+                            url: "/IntelligentAgriculture/breedingLog/patrol",
+                            type: "post",
+                            data: form,
+                            processData: false,
+                            contentType: false,
+                            success: function(data) {
+                                if (data.resCode == 1) {
+                                    self.$message.success("提交成功!");
+                                    self.getTableDate();
+                                    self.resetForm(formName);
+                                } else if (data.resCode == 0) {
+                                    self.$message.error("提交失败!")
+                                }
+                            }
+                        });
+                    } else {
+                        return false;
+                    }
                 })
             },
             //重置参数
-            resetForm(formName){
+            resetForm(formName) {
                 this.$refs[formName].resetFields();
             },
-
+    
             //获取表格数据
-            swithKind(tab){
+            swithKind(tab) {
                 const self = this;
-                self.kind = tab.name ;
+                self.kind = tab.name;
                 self.getTableDate();
             },
-            getTableDate(){
+            getTableDate() {
                 const self = this;
                 let data = {
                     page: self.kind == 'throw' ? self.daily.curPage : self.polling.curPage,
                     kind: self.kind
                 }
-
-                self.$.get("/IntelligentAgriculture/breedingLog/showMyLog",data,function(data){
+    
+                self.$.get("/IntelligentAgriculture/breedingLog/showMyLog", data, function(data) {
                     data = JSON.parse(data);
-                    if(data.resCode == 1){
-                        if(self.kind == "throw"){
+                    if (data.resCode == 1) {
+                        if (self.kind == "throw") {
                             self.daily.totalRecode = data.res.totalSizeRecord;
                             self.daily.totalPages = data.res.totalPages;
-                            self.daily.curPage = data.res.currentPage*1;
+                            self.daily.curPage = data.res.currentPage * 1;
                             self.formData.tb_daily = [];
                             var i = 1
-                            for(const item of data.res.recordsByPage){
+                            for (const item of data.res.recordsByPage) {
                                 self.formData.tb_daily.push({
-                                    id:i++,
-                                    name:item.Name,
-                                    type:item.InputTypeName,
-                                    pond:item.Pond_Name,
-                                    money:item.Value,
-                                    pic:item.ImageUrl,
-                                    date:item.ActiveTime
+                                    id: i++,
+                                    name: item.Name,
+                                    type: item.InputTypeName,
+                                    pond: item.Pond_Name,
+                                    money: item.Value,
+                                    pic: item.ImageUrl,
+                                    date: item.ActiveTime
                                 })
                             }
-                        }else{
+                        } else {
                             self.polling.totalRecode = data.res.totalSizeRecord;
                             self.polling.totalPages = data.res.totalPages;
-                            self.polling.curPage = data.res.currentPage*1;
+                            self.polling.curPage = data.res.currentPage * 1;
                             self.formData.tb_polling = [];
                             var i = 1
-                            for(const item of data.res.recordsByPage){
+                            for (const item of data.res.recordsByPage) {
                                 self.formData.tb_polling.push({
-                                    id:i++,
-                                    pond:item.Pond_Name,
-                                    content:item.ContentType + ":" +item.ContentStatus,
-                                    inputData:item.Name+item.Value || "",
-                                    pic:item.ImageUrl,
-                                    date:item.ActiveTime
+                                    id: i++,
+                                    pond: item.Pond_Name,
+                                    content: item.ContentType + ":" + item.ContentStatus,
+                                    inputData: item.Name + item.Value || "",
+                                    pic: item.ImageUrl,
+                                    date: item.ActiveTime
                                 })
                             }
                         }
-                    }else if(data.resCode == 0){
+                    } else if (data.resCode == 0) {
                         self.$message.error("获取日志失败")
                     }
                 })
             },
-            curChange(val){
+            curChange(val) {
                 const self = this;
                 self.getTableDate()
             },
             //表格中查看图片
-            checkImg(index,row){
+            checkImg(index, row) {
                 const self = this;
-                // let pic = row.pic.replace(/\[|\]/g,"");
-                let data1 = {
-                    names : row.pic
+                if(row.pic.length>2){
+                    window.open("/IntelligentAgriculture/patrolManage/loadImages?names="+row.pic)
+                    // self.$.post("/IntelligentAgriculture/breedingLog/loadImages",row.pic,function(data){
+                    //     data = JSON.parse(data);
+                    //     if(data.resCode == 1){
+                    //         if(data.res.length == 0){
+                    //             self.$message.info("暂无图片")
+                    //         }else{
+                    //             console.log(data.res)
+                    //         }
+                    //     }else if(data.resCode == 0){
+                    //         self.$message.error("获取图片失败")
+                    //     }
+                    // })
+                }else{
+                    self.$message.info("暂无图片")
                 }
-                self.$.post("/IntelligentAgriculture/breedingLog/loadImages",data1,function(data){
-                    data = JSON.parse(data);
-                    console.log(data.res[0])
-                    if(data.resCode == 1){
-                        if(data.res.length == 0){
-                            self.$message.info("暂无图片")
-                        }else{
-                            // window.location = data.res[0]
-                        }
-                    }else if(data.resCode == 0){
-                        self.$message.error("获取图片失败")
-                    }
-                })
+                
             },
-
+    
             //导出表格内容
-            exportTable(formName){
+            exportTable(formName) {
                 const self = this;
                 var start = new Date(self.form_export.startTime);
                 var end = new Date(self.form_export.endTime);
-                if(start.getTime()>end.getTime()){
+                if (start.getTime() > end.getTime()) {
                     self.$message.error("结束时间不能早于开始时间")
-                }else{
+                } else {
                     var form = self.$('<form id="excel"></form>');
                     self.$('body').append(form);
                     var input1 = self.$("<input type='text' name='startTime'></input>");
                     var input2 = self.$("<input type='text' name='endTime'></input>");
                     var input3 = self.$("<input type='text' name='content_select'></input>");
-                    input1.attr('value',start.toLocaleDateString())
-                    input2.attr('value',end.toLocaleDateString())
-                    input3.attr('value',self.form_export.exportType)
-                    form.append(input1,input2,input3)
-                    form.attr('action',"IntelligentAgriculture/breedingLog/export");
-                    form.attr("method","POST");
-                    form.attr('enctype',"multipart/form-data")
+                    input1.attr('value', start.toLocaleDateString())
+                    input2.attr('value', end.toLocaleDateString())
+                    input3.attr('value', self.form_export.exportType)
+                    form.append(input1, input2, input3)
+                    form.attr('action', "IntelligentAgriculture/breedingLog/export");
+                    form.attr("method", "POST");
+                    form.attr('enctype', "multipart/form-data")
                     form.submit();
                     self.$("#excel").remove()
                     self.resetForm(formName);
@@ -803,7 +981,7 @@
                 }
             }
         },
-        mounted(){
+        mounted() {
             var self = this;
             self.getPonds();
             self.getDailyInputType();
@@ -815,42 +993,48 @@
 </script>
 
 <style scoped>
-    .el-input{
-        width:300px;
-        margin-right:10px;
+    .el-input {
+        width: 300px;
+        margin-right: 10px;
     }
-    .actTheme{
-        position:relative;
+    
+    .actTheme {
+        position: relative;
     }
-    .btn_group{
-        position:absolute;
-        bottom:0;
+    
+    .btn_group {
+        position: absolute;
+        bottom: 0;
     }
-    .theme_title{
-        width:90px !important;
-        font-size:16px;
-        font-weight:600;
-        color:#333;
+    
+    .theme_title {
+        width: 90px !important;
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
     }
-    .boundary{
-        position:absolute;
+    
+    .boundary {
+        position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width:1px;
-        height:100%;
-        background-color:#9b9b9b;
+        width: 1px;
+        height: 100%;
+        background-color: #9b9b9b;
     }
-    .myDaily{
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        padding:20px 0px;
-        font-size:16px;
-        font-weight:600;
+    
+    .myDaily {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 0px;
+        font-size: 16px;
+        font-weight: 600;
     }
-    .pagina{
-        text-align:center;
-        padding-top:20px;
+    
+    .pagina {
+        text-align: center;
+        padding-top: 20px;
     }
 </style>
