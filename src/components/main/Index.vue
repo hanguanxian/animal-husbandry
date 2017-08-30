@@ -4,7 +4,7 @@
 			<el-col :span="24" style="position:relative">
 				<el-carousel trigger="click" height="380px">
 					<el-carousel-item v-for="item in 4" :key="item">
-						<h3></h3>
+						<img style="width: 100%;" src="../../../static/images/banner1.jpg"/>
 					</el-carousel-item>
 				</el-carousel>
 				<div class="bus_and_tec">
