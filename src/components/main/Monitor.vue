@@ -306,7 +306,7 @@
         let startTime = self.chartForm.timeRange[0].format("hh:mm:ss");
         let endTime = self.chartForm.timeRange[1].format("hh:mm:ss");
         let data = {
-          factoryid: self.tangKou.facID,
+          facid: self.tangKou.facID,
           comid: self.tangKou.comID,
           senid: self.tangKou.senID,
           startTime: startTime,

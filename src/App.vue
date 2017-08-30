@@ -50,7 +50,10 @@ export default {
 	ul{
 		list-style:none;
 	}
-
+	a{ text-decoration: none; color: #000;}
+	a:hover {
+	  color: #098994;
+	}
 	/* 轮播图导航位置 */
 	.el-carousel__indicators {
 		bottom: 80px;
