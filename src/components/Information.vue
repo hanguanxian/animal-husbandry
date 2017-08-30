@@ -42,12 +42,12 @@
                     width="220"
                     >
                 </el-table-column>
-                <el-table-column 
-                    prop="person" 
+                <el-table-column
+                    prop="person"
                     label="责任人">
                 </el-table-column>
-                <el-table-column 
-                    prop="tel" 
+                <el-table-column
+                    prop="tel"
                     label="联系方式"
                     width="150">
                 </el-table-column>
@@ -65,7 +65,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-row>    
+            <el-row>
                 <el-col :span="12" :offset="2" style="margin-top:50px">
                     <el-form ref="form_pond" :model="form_pond" :rules="pond_rule" label-position="left" label-width="80px">
                         <el-form-item prop="name" label="水塘名称">
@@ -91,7 +91,7 @@
                                 <template slot="append">亩</template>
                             </el-input>
                         </el-form-item>
-                        
+
                         <!--地区-->
                         <el-form-item prop="location" label="地区">
                             <el-cascader
@@ -116,9 +116,9 @@
                     </el-form>
                 </el-col>
             </el-row>
-            
+
         </div>
-        
+
         <el-row style="background:#262e39">
 			<el-col :span="24" class="footer">
 				copyright &copy;2016 All rights reserved.
@@ -237,7 +237,7 @@
                     }else if(data.resCode == 0){
                         self.$message.error('获取塘口信息失败');
                     }
-                    
+
                 })
             },
             //删除塘口
@@ -262,7 +262,7 @@
                         }
                     })
                 })
-                
+
             },
             //保存新增塘口
             saveNewPond(formName){
@@ -299,7 +299,7 @@
                         return false;
                     }
                 })
-                
+
             },
             //保存修改
             saveEdit(formName){
@@ -344,7 +344,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     .header{
          width:100%;
     }
