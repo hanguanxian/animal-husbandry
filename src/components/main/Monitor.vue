@@ -197,7 +197,7 @@
           type: 'value',
 			    boundaryGap: false,
 			    gridIndex: 0,
-          min : 4,
+          min : 0,
 			    splitNumber: 5
         }],
         series: []
