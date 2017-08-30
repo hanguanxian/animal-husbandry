@@ -101,9 +101,9 @@
             return {
                 activeItem:0,
                 menu:[
-                    {label:"专家列表",value:"",en:"Aquaculture Encyclopedia"},
-                    {label:"问题集萃",value:"",en:"Feed storage"},
-                    {label:"我要提问",value:"",en:"Fish pharmacy store"}
+                    {label:"专家列表",value:"",en:"Expert"},
+                    {label:"问题集萃",value:"",en:"FAQ"},
+                    {label:"我要提问",value:"",en:"Quiz"}
                 ],
                 newQuestions:[],
                 hostQuestions:[],
