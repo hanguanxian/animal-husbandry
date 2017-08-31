@@ -252,12 +252,22 @@
           for (var i = 0; i < result.res.length; i++) {
             switch (result.res[i].type) {
               case "water_temp_1":
+              case "water_temp_2":
+              case "temp":
+              case "temp_ws":
                 self.currentData.temperature = result.res[i].value || '';
                 break;
               case "ph_1":
+              case "ph_2":
+              case "ph_ph":
+              case "ph":
                 self.currentData.ph = result.res[i].value || '';
                 break;
               case "do2_1":
+              case "do2_2":
+              case "do_do":
+              case "do_ws":
+              case "do2":
                 self.currentData.oxygen = result.res[i].value || '';
                 break;
               default:
