@@ -16,6 +16,9 @@
       </el-tabs>
       <div id="monitor-info">
         <el-row>
+          <span :class="{childTangKou: true, active: childTangkouIndex == index}" v-for="(childTangkou,index) in childTangKous" :key="index" @click="childTangKouSelect(index)">{{childTangkou.sendescription}}</span>
+        </el-row>
+        <el-row>
           <el-col :span="8">
             <div class="info">
               <el-col :span="7" :offset="4">
@@ -120,6 +123,8 @@
         comid: ''
       },
       tangKous: [],
+      childTangKous:[],
+      childTangkouIndex: 0,
       tangKou: {},
       currentData: {
         temperature: 31.46,
@@ -233,12 +238,39 @@
         })
       },
       tangKouSelect(tab, event){//塘口选择
-        console.log(tab);
+        //console.log(tab);
         const self = this;
         let index = parseInt(tab.index);
-        self.tangKou = self.tangKous[index];
-        this.option.series = [];
+        if(self.tangKous[index].hasChild == "1") {
+          self.tangKou = self.tangKous[index];
+          self.showsensor(self.tangKous[index].orderNum);
+        } else {
+          self.tangKou = self.tangKous[index];
+          self.option.series = [];
+          self.dateTimeRange(60 * 60 * 24);
+        }
+      },
+      childTangKouSelect(index){
+        const self = this;
+        self.childTangkouIndex = index;
+        self.option.series = [];
+        self.tangKou.senID = self.childTangKous[index].senID;
         self.dateTimeRange(60 * 60 * 24);
+      },
+      showsensor(orderNum){
+          const self = this;
+          let data = {
+            facid: self.tangKou.facID,
+            comid: self.tangKou.comID,
+            areacode: orderNum
+          };
+          self.$.post("/IntelligentAgriculture/dataDisplay/showsensor",data,function(res){
+            let result = JSON.parse(res);
+            if(result.resCode){
+              self.childTangKous = result.res;
+              self.childTangKouSelect(0);
+            }
+          })
       },
       queryCurrentData(){
         const self = this;
@@ -398,5 +430,13 @@
   }
   #monitor-info .info .tip {
     font-size: 13px;
+  }
+  .childTangKou {
+    display: inline-block;
+    cursor: pointer;
+    margin: 10px 10px 35px;
+  }
+  .childTangKou.active {
+    color: #20a0ff;
   }
 </style>

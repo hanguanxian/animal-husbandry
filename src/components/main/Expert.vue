@@ -303,7 +303,7 @@
     }
     .questionForm {
       margin: 50px auto;
-      width: 70%;
+      width: 40%;
     }
 
 </style>
