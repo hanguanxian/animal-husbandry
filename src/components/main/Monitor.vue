@@ -261,6 +261,7 @@
               case "ph_2":
               case "ph_ph":
               case "ph":
+              case "ph_ws":
                 self.currentData.ph = result.res[i].value || '';
                 break;
               case "do2_1":
