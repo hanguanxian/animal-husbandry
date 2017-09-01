@@ -12,15 +12,13 @@ let config = {
 
 //axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.paramsSerializer = config.paramsSerializer;
-axios.defaults.validateStatus = config.validateStatus;
+//axios.defaults.validateStatus = config.validateStatus;
 axios.interceptors.response.use(function(response) {
-  if (response.status == 403) {
+  if (response.loginStatus == 0) {
     window.location.href = location.origin + '#login';
     return;
   }
   return response;
-}, function(error) {
-  return Promise.reject(error);
 });
 
 export default axios;

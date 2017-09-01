@@ -35,13 +35,35 @@
                                 <p class="nowrap">{{item.description}}</p>
                             </div>
                             <div class="btn_group">
+                                <a href="" class="ask" @click="askQuestion(item)">&nbsp;</a>
                                 <a href="" class="video">&nbsp;</a>
-                                <a href="" class="ask">&nbsp;</a>
                                 <a href="" class="make">&nbsp;</a>
                             </div>
                         </div>
                     </el-col>
                 </el-row>
+                <el-dialog title="提问" :visible.sync="questionDialogShow">
+                  <el-form ref="questionForm" :model="questionForm" label-width="80px">
+                    <el-form-item label="活动名称">
+                      <el-input v-model="questionForm.questionTitle"></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="活动性质">
+                      <el-checkbox-group v-model="questionForm.contentType">
+                        <el-checkbox label="饲料喂养"></el-checkbox>
+                        <el-checkbox label="水质环境"></el-checkbox>
+                        <el-checkbox label="病害防治"></el-checkbox>
+                      </el-checkbox-group>
+                    </el-form-item>
+
+                    <el-form-item label="活动形式">
+                      <el-input type="textarea" v-model="questionForm.content"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="primary" @click="questionSubmit">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-dialog>
             </div>
         </div>
         <div v-if="activeItem == 1" >
@@ -105,6 +127,8 @@
                     {label:"问题集萃",value:"",en:"FAQ"},
                     {label:"我要提问",value:"",en:"Quiz"}
                 ],
+                questionDialogShow: false,
+                orderDialogShow: false,
                 newQuestions:[],
                 hostQuestions:[],
                 questionForm:{
@@ -122,6 +146,9 @@
         methods:{
             overString(val){
                 return val.length > 70 ? val.substring(0,70)+"..." : val
+            },
+            askQuestion(item){
+
             },
             //获取专家列表
             getExpertList(){
