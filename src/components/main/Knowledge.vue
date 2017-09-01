@@ -204,11 +204,11 @@
         </div>
         <div v-if="activeItem == 4" >
           <div class="allKnowledge">
-            <h2>养殖设备&nbsp;<i class="el-icon-d-arrow-right"></i></h2>
-            <el-row style="margin: 10px;" v-for="(equipment,index) in equipments" contenteditable="" :key="index">{{ equipment.title }}</el-row>
+            <h2>养殖设备&nbsp;&gt;&gt;</h2>
+            <el-row style="margin: 10px;" v-for="(equipment,index) in equipments" :key="index">{{ equipment.title }}</el-row>
           </div>
           <div class="allKnowledge">
-            <h2>营养健康&nbsp;<i class="el-icon-d-arrow-right"></i></h2>
+            <h2>营养健康&nbsp;&gt;&gt;</h2>
             <el-row style="margin: 10px;" v-for="(nutrition,index) in nutritions" :key="index">{{ nutrition.title }}</el-row>
           </div>
         </div>
@@ -309,7 +309,7 @@
                     data = JSON.parse(data);
                     // console.log(data);
                     data.res.product.image  =  "http://210.28.188.103:8080/IntelligentAgriculture/res/"+data.res.product.image,
-                    data.res.disease.map((item)=>{ item.image = "http://210.28.188.103:8080/IntelligentAgriculture/res/"+item.image}) 
+                    data.res.disease.map((item)=>{ item.image = "http://210.28.188.103:8080/IntelligentAgriculture/res/"+item.image})
                     self.proDetail.product = data.res.product;
                     self.proDetail.breed = data.res.breed;
                     self.proDetail.disease = data.res.disease;
@@ -458,7 +458,6 @@
                 const self = this;
                 self.activeItem = index;
                 //if actice
-
             }
         },
         mounted(){
@@ -591,7 +590,7 @@
 
     .seed_item{
         display:flex;
-        margin-top:20px;    
+        margin-top:20px;
         min-height:120px;
     }
     .seed_item .left  img{

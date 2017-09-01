@@ -240,6 +240,8 @@
       tangKouSelect(tab, event){//塘口选择
         //console.log(tab);
         const self = this;
+        self.childTangKous = [];
+        self.childTangkouIndex = 0;
         let index = parseInt(tab.index);
         if(self.tangKous[index].hasChild == "1") {
           self.tangKou = self.tangKous[index];
