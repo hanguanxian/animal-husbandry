@@ -350,6 +350,7 @@
           let result = JSON.parse(res);
           if(result.resCode == 1) {
             self.$message.success("计算成功");
+            self.allHistoryListByPage
           } else {
             self.$message.error(result.msg);
           }

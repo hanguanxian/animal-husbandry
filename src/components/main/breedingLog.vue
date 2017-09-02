@@ -979,6 +979,7 @@
                     input3.attr('value', self.form_export.exportType)
                     form.append(input1, input2, input3)
                     form.attr('action', "IntelligentAgriculture/breedingLog/export");
+                    // form.attr('action', "IntelligentAgriculture/system/export");
                     form.attr("method", "POST");
                     form.attr('enctype', "multipart/form-data")
                     form.submit();

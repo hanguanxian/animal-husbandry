@@ -362,6 +362,7 @@
         };
 
         self.$.post('/IntelligentAgriculture/dataDisplay/queryAppointedTime',data,function(res){
+          let result = JSON.parse(res);
           if(result.res){
             self.option.xAxis[0].data = result.res.do_time;
             for (var i = 0; i < self.option.legend.data.length; i++) {
