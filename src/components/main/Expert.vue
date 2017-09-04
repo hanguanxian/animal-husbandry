@@ -201,6 +201,9 @@
                 self.questionDialogShow = false;
                 if(result.resCode == 1) {
                   self.$message.success("提交成功");
+                } else if (result.loginStatus == 0) {
+                  window.location.href = location.origin + '#login';
+                  return;
                 } else {
                   self.$message.error(result.msg);
                 }
@@ -217,6 +220,9 @@
                 self.appointDialogShow = false;
                 if(result.resCode == 1) {
                   self.$message.success("提交成功");
+                } else if (result.loginStatus == 0) {
+                  window.location.href = location.origin + '#login';
+                  return;
                 } else {
                   self.$message.error(result.msg);
                 }
@@ -229,6 +235,9 @@
                   let result = JSON.parse(res);
                   if(result.resCode == 1) {
                     self.expertList = result.res;
+                  } else if (result.loginStatus == 0) {
+                    window.location.href = location.origin + '#login';
+                    return;
                   } else {
                     self.$message.error(result.msg);
                   }
@@ -242,6 +251,9 @@
                   if(result.resCode == 1) {
                     self.newQuestions = result.res.newQuestionByPage;
                     console.log(result.res);
+                  } else if (result.loginStatus == 0) {
+                    window.location.href = location.origin + '#login';
+                    return;
                   } else {
                     self.$message.error(result.msg);
                   }
@@ -255,6 +267,9 @@
                 let result = JSON.parse(res);
                 if(result.resCode == 1) {
                   self.$message.success("提交成功");
+                } else if (result.loginStatus == 0) {
+                  window.location.href = location.origin + '#login';
+                  return;
                 } else {
                   self.$message.error(result.msg);
                 }
@@ -266,7 +281,9 @@
                   let result = JSON.parse(res);
                   if(result.resCode == 1) {
                     self.hostQuestions = result.res.hotQuestionByPage;
-                    console.log(result.res);
+                  } else if (result.loginStatus == 0) {
+                    window.location.href = location.origin + '#login';
+                    return;
                   } else {
                     self.$message.error(result.msg);
                   }
@@ -278,7 +295,7 @@
             self.getExpertList();
             self.getQsList();
             self.getHotQsList();
-;        }
+        }
     }
 </script>
 
